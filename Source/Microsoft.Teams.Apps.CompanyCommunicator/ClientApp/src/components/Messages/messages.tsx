@@ -130,6 +130,22 @@ class Messages extends React.Component<IMessageProps, IMessageState> {
             >
             </Text>
           </Flex.Item>
+          <Flex.Item size="size.quarter" variables={{ 'size.quarter': '24%' }} shrink={false}>
+                  <Text
+                      truncated
+                      content={this.localize("SenderName")}
+                      weight="bold"
+                  >
+                  </Text>
+              </Flex.Item>
+              <Flex.Item size="size.quarter" variables={{ 'size.quarter': '24%' }} shrink={false}>
+                  <Text
+                      truncated
+                      content={this.localize("DepartmentName")}
+                      weight="bold"
+                  >
+                  </Text>
+              </Flex.Item>
           <Flex.Item size="size.quarter" variables={{ 'size.quarter': '24%' }}>
             <Text></Text>
           </Flex.Item>
