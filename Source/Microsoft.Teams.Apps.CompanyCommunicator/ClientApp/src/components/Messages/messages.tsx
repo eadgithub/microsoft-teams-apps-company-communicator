@@ -146,9 +146,9 @@ class Messages extends React.Component<IMessageProps, IMessageState> {
                   >
                   </Text>
               </Flex.Item>
-          <Flex.Item size="size.quarter" variables={{ 'size.quarter': '24%' }}>
+          {/* <Flex.Item size="size.quarter" variables={{ 'size.quarter': '24%' }}>
             <Text></Text>
-          </Flex.Item>
+          </Flex.Item> */}
           <Flex.Item size="size.quarter" variables={{ 'size.quarter': '24%' }} shrink={false}>
             <Text
               truncated
