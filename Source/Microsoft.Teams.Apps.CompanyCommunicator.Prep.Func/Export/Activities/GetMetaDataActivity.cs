@@ -87,6 +87,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Prep.Func.Export.Activities
             var userPrincipalName = (user != null) ?
                 user.UserPrincipalName :
                 this.localizer.GetString("AdminConsentError");
+            
 
             return this.Get(
                 exportRequiredData.notificationDataEntity,

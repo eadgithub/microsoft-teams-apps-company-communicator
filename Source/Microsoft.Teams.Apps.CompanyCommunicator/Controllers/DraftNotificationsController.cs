@@ -123,8 +123,9 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
             {
                 return this.BadRequest(errorMessage);
             }
-            GetUser();
+          GetUser();
             System.Diagnostics.Debug.WriteLine("outside function");
+            Console.WriteLine("outside");
             var notificationEntity = new NotificationDataEntity
             {
                 PartitionKey = NotificationDataTableNames.DraftNotificationsPartition,
@@ -144,7 +145,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
                 Groups = notification.Groups,
                 AllUsers = notification.AllUsers,
                 SenderName = CurrentUser.DisplayName,
-                DepartmentName=CurrentUser.Department,
+                DepartmentName = CurrentUser.Department
             };
 
             await this.notificationDataRepository.CreateOrUpdateAsync(notificationEntity);
@@ -152,8 +153,17 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
         }
         private async void GetUser()
         {
-           CurrentUser= await userservice.GetCurrentUserAsync();
+            var users = userservice.GetUsersAsync(this.HttpContext.User?.Identity?.Name.ToString());
+          
+
+           await foreach (var c in users)
+            {
+                CurrentUser = (c as User);
+            }
             System.Diagnostics.Debug.WriteLine("inside"+userservice.GetType());
+            Console.WriteLine("inside" + userservice.GetType());
+            
+
         }
         /// <summary>
         /// Delete an existing draft notification.
