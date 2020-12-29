@@ -61,5 +61,9 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Models
         /// Gets or sets notification status. <see cref="NotificationStatus"/> for possible values.
         /// </summary>
         public string Status { get; set; }
+
+        /// </summary>
+        public string CreatedBy { get; set; }
+        /// </summary>
     }
 }

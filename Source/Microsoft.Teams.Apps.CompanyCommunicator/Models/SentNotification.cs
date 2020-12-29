@@ -76,5 +76,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Models
         /// Gets or sets a value indicating whether sending is in progress.
         /// </summary>
         public bool SendingCompleted { get; set; }
+
+        public string CreatedBy { get; set; }
     }
 }

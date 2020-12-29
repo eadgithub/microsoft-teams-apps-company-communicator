@@ -13,9 +13,11 @@ type Notification = {
     throttled: number,
     title: string,
     totalMessageCount: number,
+    createdBy: string
 }
 
 export const selectMessage = (message: any) => {
+  
     return {
         type: 'MESSAGE_SELECTED',
         payload: message
@@ -28,6 +30,7 @@ export const getMessagesList = () => async (dispatch: any) => {
     notificationList.forEach(notification => {
         notification.sendingStartedDate = formatDate(notification.sendingStartedDate);
         notification.sentDate = formatDate(notification.sentDate);
+        
     });
     dispatch({ type: 'FETCH_MESSAGES', payload: notificationList });
 };
