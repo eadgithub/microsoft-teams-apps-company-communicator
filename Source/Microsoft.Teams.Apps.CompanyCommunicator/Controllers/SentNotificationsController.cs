@@ -165,7 +165,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
                     TotalMessageCount = notificationEntity.TotalMessageCount,
                     SendingStartedDate = notificationEntity.SendingStartedDate,
                     Status = notificationEntity.GetStatus(),
-                    CreatedBy = notificationEntity.CreatedBy,
+                    CreatedBy = notificationEntity.SenderName,
                 };
 
                 result.Add(summary);

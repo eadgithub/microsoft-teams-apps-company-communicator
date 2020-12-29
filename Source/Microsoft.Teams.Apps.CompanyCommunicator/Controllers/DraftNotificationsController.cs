@@ -19,6 +19,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
     using Microsoft.Teams.Apps.CompanyCommunicator.DraftNotificationPreview;
     using Microsoft.Teams.Apps.CompanyCommunicator.Models;
     using Microsoft.Teams.Apps.CompanyCommunicator.Repositories.Extensions;
+    using Microsoft.Graph;
+
 
     /// <summary>
     /// Controller for the draft notification data.
@@ -33,6 +35,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
         private readonly IGroupsService groupsService;
         private readonly IStringLocalizer<Strings> localizer;
         private readonly IUsersService userservice;
+        private User CurrentUser;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DraftNotificationsController"/> class.
@@ -120,7 +123,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
             {
                 return this.BadRequest(errorMessage);
             }
-
+            GetUser();
             var notificationEntity = new NotificationDataEntity
             {
                 PartitionKey = NotificationDataTableNames.DraftNotificationsPartition,
@@ -139,13 +142,17 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
                 Rosters = notification.Rosters,
                 Groups = notification.Groups,
                 AllUsers = notification.AllUsers,
-                SenderName = await userservice.GetCurrentUserAsync().Department
+                SenderName = CurrentUser.DisplayName,
+                DepartmentName=CurrentUser.Department,
             };
 
             await this.notificationDataRepository.CreateOrUpdateAsync(notificationEntity);
             return this.Ok();
         }
-
+        private async void GetUser()
+        {
+           CurrentUser= await userservice.GetCurrentUserAsync();
+        }
         /// <summary>
         /// Delete an existing draft notification.
         /// </summary>

@@ -31,6 +31,7 @@ export interface IMessage {
   reactions?: string;
   responses?: string;
   createdBy: string;
+  DepartmentName: string;
 }
 
 export interface IMessageProps extends WithTranslation {
@@ -228,7 +229,7 @@ class Messages extends React.Component<IMessageProps, IMessageState> {
         <Flex.Item size="size.quarter" variables={{ 'size.quarter': '16%' }} grow={1}>
           <Text
             truncated
-            content={message.acknowledgements}
+            content={message.DepartmentName}
           >
           </Text>
         </Flex.Item>
