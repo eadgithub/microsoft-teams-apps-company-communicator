@@ -126,13 +126,29 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.MicrosoftGrap
                     {
                         user.Id,
                         user.DisplayName,
-                        user.UserPrincipalName,
+                        user.UserPrincipalName,      
                     })
                     .WithMaxRetry(GraphConstants.MaxRetry)
                     .GetAsync();
             return graphResult;
         }
 
+        public async Task<User> GetCurrentUserAsync()
+        {
+            var graphResult = await this.graphServiceClient
+                    .Me
+                    .Request()
+                    .Select(user => new
+                    {
+                        user.Id,
+                        user.DisplayName,
+                        user.UserPrincipalName,
+                        user.Department,
+                    })
+                    .WithMaxRetry(GraphConstants.MaxRetry)
+                    .GetAsync();
+            return graphResult;
+        }
         /// <inheritdoc/>
         public async Task<(IEnumerable<User>, string)> GetAllUsersAsync(string deltaLink = null)
         {

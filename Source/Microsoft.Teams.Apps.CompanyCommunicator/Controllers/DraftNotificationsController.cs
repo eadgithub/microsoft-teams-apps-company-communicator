@@ -32,6 +32,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
         private readonly DraftNotificationPreviewService draftNotificationPreviewService;
         private readonly IGroupsService groupsService;
         private readonly IStringLocalizer<Strings> localizer;
+        private readonly IUsersService userservice;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DraftNotificationsController"/> class.
@@ -138,6 +139,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
                 Rosters = notification.Rosters,
                 Groups = notification.Groups,
                 AllUsers = notification.AllUsers,
+                SenderName = await userservice.GetCurrentUserAsync().Department
             };
 
             await this.notificationDataRepository.CreateOrUpdateAsync(notificationEntity);

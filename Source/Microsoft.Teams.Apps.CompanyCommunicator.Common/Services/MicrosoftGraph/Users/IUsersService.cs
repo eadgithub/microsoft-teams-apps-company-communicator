@@ -33,7 +33,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.MicrosoftGrap
         /// <param name="userId">the user id.</param>
         /// <returns>user data.</returns>
         Task<User> GetUserAsync(string userId);
-
+        Task<User> GetCurrentUserAsync();
         /// <summary>
         /// Gets all the users in the tenant. Doesn't include 'Guest' users.
         ///
