@@ -135,6 +135,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.MicrosoftGrap
 
         public async Task<User> GetCurrentUserAsync()
         {
+            Console.WriteLine(this.graphServiceClient.ToString());
             var graphResult = await this.graphServiceClient
                     .Me
                     .Request()
