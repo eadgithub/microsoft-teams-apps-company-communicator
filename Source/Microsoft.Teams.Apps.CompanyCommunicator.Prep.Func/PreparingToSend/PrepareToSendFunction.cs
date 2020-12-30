@@ -66,7 +66,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Prep.Func
                 FunctionNames.PrepareToSendOrchestrator,
                 sentNotificationDataEntity);
 
-            log.LogInformation($"Started orchestration with ID = '{instanceId}'.");
+            log.LogInformation($"Started orchestration with ID= '{instanceId}'.");
         }
     }
 }
