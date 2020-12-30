@@ -6,6 +6,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator
 {
     extern alias BetaLib;
 
+    using System;
     using System.Net;
     using global::Azure.Storage.Blobs;
     using Microsoft.AspNetCore.Builder;
@@ -19,7 +20,9 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Options;
     using Microsoft.Graph;
+    using Microsoft.Identity.Client;
     using Microsoft.Teams.Apps.CompanyCommunicator.Authentication;
     using Microsoft.Teams.Apps.CompanyCommunicator.Bot;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories;
@@ -171,7 +174,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator
 
             // Add draft notification preview services.
             services.AddTransient<DraftNotificationPreviewService>();
-
+            
             // Add microsoft graph services.
             services.AddScoped<IAuthenticationProvider, GraphTokenProvider>();
             services.AddScoped<IGraphServiceClient, GraphServiceClient>();
@@ -179,7 +182,24 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator
             services.AddScoped<IGraphServiceFactory, GraphServiceFactory>();
             services.AddScoped<IGroupsService>(sp => sp.GetRequiredService<IGraphServiceFactory>().GetGroupsService());
             services.AddScoped<IAppCatalogService>(sp => sp.GetRequiredService<IGraphServiceFactory>().GetAppCatalogService());
+            // Graph Token Services
+            services.AddSingleton<IConfidentialClientApplication>(provider =>
+            {
+                var options = provider.GetRequiredService<IOptions<ConfidentialClientApplicationOptions>>();
+                return ConfidentialClientApplicationBuilder
+                    .Create(options.Value.ClientId)
+                    .WithClientSecret(options.Value.ClientSecret)
+                    .WithAuthority(new Uri($"https://login.microsoftonline.com/{options.Value.TenantId}"))
+                    .Build();
+            });
+            services.AddSingleton<IAuthenticationProvider, MsalAuthenticationProvider>();
 
+            //Add Graph Client
+            services.AddSingleton<IGraphServiceClient>(
+                serviceProvider =>
+                new GraphServiceClient(serviceProvider.GetRequiredService<IAuthenticationProvider>()));
+            services.AddSingleton<Beta.IGraphServiceClient>(
+                sp => new Beta.GraphServiceClient(sp.GetRequiredService<IAuthenticationProvider>()));
             // Add User service
             services.AddScoped<IUsersService>(sp => sp.GetRequiredService<IGraphServiceFactory>().GetUsersService());
 

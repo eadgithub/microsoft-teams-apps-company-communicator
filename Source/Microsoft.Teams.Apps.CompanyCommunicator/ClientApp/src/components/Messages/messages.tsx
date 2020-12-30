@@ -30,8 +30,8 @@ export interface IMessage {
   acknowledgements?: string;
   reactions?: string;
   responses?: string;
-  createdBy: string;
-  DepartmentName: string;
+  departmentName: string;
+  senderName: string;
 }
 
 export interface IMessageProps extends WithTranslation {
@@ -207,7 +207,9 @@ class Messages extends React.Component<IMessageProps, IMessageState> {
 
   private messageContent = (message: any) => {
     console.log("Debug: ",message);
-    console.log("Created: ",message.createdBy);
+      console.log("SenderName: ", message.SenderName);
+      console.log("DepartmentName: ", message.DepartmentName);
+
     return (
       
       <Flex className="listContainer" vAlign="center" fill gap="gap.small">
@@ -221,7 +223,7 @@ class Messages extends React.Component<IMessageProps, IMessageState> {
         <Flex.Item size="size.quarter" variables={{ 'size.quarter': '16%' }} grow={1}>
           <Text
             truncated
-            content={message.createdBy}
+                   content={message.senderName}
           >
           </Text>
         </Flex.Item>
@@ -229,7 +231,7 @@ class Messages extends React.Component<IMessageProps, IMessageState> {
         <Flex.Item size="size.quarter" variables={{ 'size.quarter': '16%' }} grow={1}>
           <Text
             truncated
-            content={message.DepartmentName}
+            content={message.departmentName}
           >
           </Text>
         </Flex.Item>

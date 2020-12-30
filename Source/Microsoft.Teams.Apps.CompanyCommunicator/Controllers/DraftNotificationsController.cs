@@ -26,6 +26,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
     using Microsoft.Identity.Client;
 
     using Microsoft.AspNetCore.Builder;
+    using Microsoft.Teams.Apps.CompanyCommunicator.Common.Extensions;
 
 
     /// <summary>
@@ -43,6 +44,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
         private readonly IStringLocalizer<Strings> localizer;
         private readonly IUsersService userservice;
         private User currentUser;
+        private string name;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DraftNotificationsController"/> class.
@@ -85,10 +87,13 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
             {
                 return this.Forbid();
             }
-
+            name = this.HttpContext.User?.Identity?.Name;
+            GetUser();
             var notificationId = await this.notificationDataRepository.CreateDraftNotificationAsync(
                 notification,
-                this.HttpContext.User?.Identity?.Name);
+                this.HttpContext.User?.Identity?.Name, currentUser);
+            
+
             return this.Ok(notificationId);
         }
 
@@ -126,12 +131,12 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
             {
                 return this.Forbid();
             }
-
+            
             if (!notification.Validate(this.localizer, out string errorMessage))
             {
                 return this.BadRequest(errorMessage);
             }
-            GetUser();
+             
             System.Diagnostics.Debug.WriteLine("outside function");
             Console.WriteLine("outside");
             var notificationEntity = new NotificationDataEntity
@@ -153,60 +158,18 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
                 Groups = notification.Groups,
                 AllUsers = notification.AllUsers,
                 SenderName = currentUser.DisplayName,
-                DepartmentName = currentUser.Department
+                DepartmentName = currentUser.Department,
             };
 
             await this.notificationDataRepository.CreateOrUpdateAsync(notificationEntity);
             return this.Ok();
         }
-        //private void AddGraphServices()
-        //{
-
-        //    var client = new ConfidentialClientApplicationOptions();
-
-        //    client.ClientId = configuration.GetValue<string>("MicrosoftAppId");
-        //    client.ClientSecret = configuration.GetValue<string>("MicrosoftAppPassword");
-        //    client.TenantId = configuration.GetValue<string>("TenantId");
-        //        });
-
-        //    // Graph Token Services
-        //    builder.Services.AddSingleton<IConfidentialClientApplication>(provider =>
-        //    {
-        //        var options = provider.GetRequiredService<IOptions<ConfidentialClientApplicationOptions>>();
-        //        return ConfidentialClientApplicationBuilder
-        //            .Create(options.Value.ClientId)
-        //            .WithClientSecret(options.Value.ClientSecret)
-        //            .WithAuthority(new Uri($"https://login.microsoftonline.com/{options.Value.TenantId}"))
-        //            .Build();
-        //    });
-
-        //    builder.Services.AddSingleton<IAuthenticationProvider, MsalAuthenticationProvider>();
-
-        //    // Add Graph Clients.
-        //    builder.Services.AddSingleton<IGraphServiceClient>(
-        //        serviceProvider =>
-        //        new GraphServiceClient(serviceProvider.GetRequiredService<IAuthenticationProvider>()));
-        //    builder.Services.AddSingleton<Beta.IGraphServiceClient>(
-        //        sp => new Beta.GraphServiceClient(sp.GetRequiredService<IAuthenticationProvider>()));
-
-        //    // Add Service Factory
-        //    builder.Services.AddSingleton<IGraphServiceFactory, GraphServiceFactory>();
-
-        //    // Add Graph Services
-        //    builder.Services.AddScoped<IUsersService>(sp => sp.GetRequiredService<IGraphServiceFactory>().GetUsersService());
-           
-        //}
+        
 
         private async void GetUser()
         {
-            
-            var users = userservice.GetUsersAsync(this.HttpContext.User?.Identity?.Name.ToString());
-          
-
-           await foreach (var c in users)
-            {
-                currentUser = (c as User);
-            }
+            var users = AsyncHelpers.RunSync<IList<User>>(()=>userservice.GetUsersAsyncTest());
+            currentUser = users.Where<User>(x => x.UserPrincipalName == name).First<User>();
             System.Diagnostics.Debug.WriteLine("inside"+userservice.GetType());
             Console.WriteLine("inside" + userservice.GetType());
             
@@ -288,6 +251,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
                 Rosters = notificationEntity.Rosters,
                 Groups = notificationEntity.Groups,
                 AllUsers = notificationEntity.AllUsers,
+                DepartmentName=notificationEntity.DepartmentName,
+                SenderName=notificationEntity.SenderName,
             };
 
             return this.Ok(result);

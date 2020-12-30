@@ -106,6 +106,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.MicrosoftGrap
                         user.Id,
                         user.DisplayName,
                         user.UserPrincipalName,
+                        user.Department,
                     })
                     .GetAsync();
             yield return graphResult.CurrentPage;
@@ -114,6 +115,23 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.MicrosoftGrap
                 graphResult = await graphResult.NextPageRequest.GetAsync();
                 yield return graphResult.CurrentPage;
             }
+        }
+        public async Task<IList<User>> GetUsersAsyncTest(string filter = null)
+        {
+            var graphResult = await this.graphServiceClient
+                    .Users
+                    .Request()
+                    .WithMaxRetry(GraphConstants.MaxRetry)
+                    .Filter(filter)
+                    .Select(user => new
+                    {
+                        user.Id,
+                        user.DisplayName,
+                        user.UserPrincipalName,
+                        user.Department,
+                    })
+                    .GetAsync();
+            return graphResult.CurrentPage;
         }
 
         /// <inheritdoc/>
@@ -139,14 +157,6 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.MicrosoftGrap
             var graphResult = await this.graphServiceClient
                     .Me
                     .Request()
-                    .Select(user => new
-                    {
-                        user.Id,
-                        user.DisplayName,
-                        user.UserPrincipalName,
-                        user.Department,
-                    })
-                    .WithMaxRetry(GraphConstants.MaxRetry)
                     .GetAsync();
             return graphResult;
         }

@@ -165,7 +165,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
                     TotalMessageCount = notificationEntity.TotalMessageCount,
                     SendingStartedDate = notificationEntity.SendingStartedDate,
                     Status = notificationEntity.GetStatus(),
-                    CreatedBy = notificationEntity.SenderName,
+                    SenderName = notificationEntity.SenderName,
+                    DepartmentName = notificationEntity.DepartmentName,
                 };
 
                 result.Add(summary);
@@ -222,6 +223,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
                 CanDownload = userNotificationDownload == null,
                 SendingCompleted = notificationEntity.IsCompleted(),
                 CreatedBy = notificationEntity.CreatedBy,
+                SenderName=notificationEntity.SenderName,
+                DepartmentName=notificationEntity.DepartmentName,
             };
 
             return this.Ok(result);

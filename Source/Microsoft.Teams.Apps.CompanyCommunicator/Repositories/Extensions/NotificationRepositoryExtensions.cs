@@ -6,6 +6,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Repositories.Extensions
 {
     using System;
     using System.Threading.Tasks;
+    using Microsoft.Graph;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.NotificationData;
     using Microsoft.Teams.Apps.CompanyCommunicator.Models;
 
@@ -24,7 +25,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Repositories.Extensions
         public static async Task<string> CreateDraftNotificationAsync(
             this NotificationDataRepository notificationRepository,
             DraftNotification notification,
-            string userName)
+            string userName, User user)
         {
             var newId = notificationRepository.TableRowKeyGenerator.CreateNewKeyOrderingOldestToMostRecent();
 
@@ -46,11 +47,15 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Repositories.Extensions
                 Rosters = notification.Rosters,
                 Groups = notification.Groups,
                 AllUsers = notification.AllUsers,
+                DepartmentName=user.Department,
+                SenderName=user.DisplayName,
             };
 
             await notificationRepository.CreateOrUpdateAsync(notificationEntity);
 
             return newId;
         }
+        
+
     }
 }

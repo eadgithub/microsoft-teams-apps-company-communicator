@@ -71,24 +71,24 @@ echo Handling ASP.NET Core Web Application deployment.
 @REM call :ExecuteCmd dotnet restore "%DEPLOYMENT_SOURCE%\Source\Microsoft.Teams.Apps.CompanyCommunicator.sln"
 @REM IF !ERRORLEVEL! NEQ 0 goto error
 
-@REM :: 2. Restore npm packages
-@REM echo Restoring npm packages (this can take several minutes)
-@REM pushd "%DEPLOYMENT_SOURCE%\Source\Microsoft.Teams.Apps.CompanyCommunicator\ClientApp"
+:: 2. Restore npm packages
+echo Restoring npm packages (this can take several minutes)
+pushd "%DEPLOYMENT_SOURCE%\Source\Microsoft.Teams.Apps.CompanyCommunicator\ClientApp"
 
-@REM call :ExecuteCmd npm install --no-audit
-@REM IF !ERRORLEVEL! NEQ 0 (
-@REM     echo First attempt failed, retrying once
-@REM     call :ExecuteCmd npm install --no-audit
-@REM )
-@REM popd
-@REM IF !ERRORLEVEL! NEQ 0 goto error
+call :ExecuteCmd npm install --no-audit
+IF !ERRORLEVEL! NEQ 0 (
+    echo First attempt failed, retrying once
+    call :ExecuteCmd npm install --no-audit
+)
+popd
+IF !ERRORLEVEL! NEQ 0 goto error
 
-@REM :: 3. Build the client app
-@REM echo Building the client app (this can take several minutes)
-@REM pushd "%DEPLOYMENT_SOURCE%\Source\Microsoft.Teams.Apps.CompanyCommunicator\ClientApp"
-@REM call :ExecuteCmd npm run build
-@REM popd
-@REM IF !ERRORLEVEL! NEQ 0 goto error
+:: 3. Build the client app
+echo Building the client app (this can take several minutes)
+pushd "%DEPLOYMENT_SOURCE%\Source\Microsoft.Teams.Apps.CompanyCommunicator\ClientApp"
+call :ExecuteCmd npm run build
+popd
+IF !ERRORLEVEL! NEQ 0 goto error
 
 :: 4. Build and publish
 echo Building the application

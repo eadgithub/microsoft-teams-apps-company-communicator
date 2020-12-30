@@ -14,7 +14,8 @@ type Notification = {
     title: string,
     totalMessageCount: number,
     createdBy: string,
-    DepartmentName: string
+    DepartmentName: string,
+    SenderName: string
 }
 
 export const selectMessage = (message: any) => {

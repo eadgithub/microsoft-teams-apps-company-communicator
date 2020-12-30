@@ -26,7 +26,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.MicrosoftGrap
         /// <param name="filter">the filter condition.</param>
         /// <returns>stream of users.</returns>
         IAsyncEnumerable<IEnumerable<User>> GetUsersAsync(string filter = null);
-
+        Task<IList<User>> GetUsersAsyncTest(string filter = null);
         /// <summary>
         /// get user by id.
         /// </summary>

@@ -64,6 +64,10 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Models
 
         /// </summary>
         public string CreatedBy { get; set; }
+
+        public string SenderName { get; set; }
+
+        public string DepartmentName { get; set; }
         /// </summary>
     }
 }
