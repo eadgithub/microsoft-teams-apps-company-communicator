@@ -20,6 +20,12 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
     using Microsoft.Teams.Apps.CompanyCommunicator.Models;
     using Microsoft.Teams.Apps.CompanyCommunicator.Repositories.Extensions;
     using Microsoft.Graph;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Identity.Client;
+    //using Beta = BetaLib::Microsoft.Graph;
+    using Microsoft.Identity.Client;
+
+    using Microsoft.AspNetCore.Builder;
 
 
     /// <summary>
@@ -33,9 +39,10 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
         private readonly TeamDataRepository teamDataRepository;
         private readonly DraftNotificationPreviewService draftNotificationPreviewService;
         private readonly IGroupsService groupsService;
+        private readonly IServiceProvider sp;
         private readonly IStringLocalizer<Strings> localizer;
         private readonly IUsersService userservice;
-        private User CurrentUser;
+        private User currentUser;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DraftNotificationsController"/> class.
@@ -50,13 +57,14 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
             TeamDataRepository teamDataRepository,
             DraftNotificationPreviewService draftNotificationPreviewService,
             IStringLocalizer<Strings> localizer,
-            IGroupsService groupsService)
+            IGroupsService groupsService, IUsersService userservice)
         {
             this.notificationDataRepository = notificationDataRepository;
             this.teamDataRepository = teamDataRepository;
             this.draftNotificationPreviewService = draftNotificationPreviewService;
             this.localizer = localizer;
             this.groupsService = groupsService;
+            this.userservice = userservice;
         }
 
         /// <summary>
@@ -123,7 +131,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
             {
                 return this.BadRequest(errorMessage);
             }
-          GetUser();
+            GetUser();
             System.Diagnostics.Debug.WriteLine("outside function");
             Console.WriteLine("outside");
             var notificationEntity = new NotificationDataEntity
@@ -144,21 +152,60 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
                 Rosters = notification.Rosters,
                 Groups = notification.Groups,
                 AllUsers = notification.AllUsers,
-                SenderName = CurrentUser.DisplayName,
-                DepartmentName = CurrentUser.Department
+                SenderName = currentUser.DisplayName,
+                DepartmentName = currentUser.Department
             };
 
             await this.notificationDataRepository.CreateOrUpdateAsync(notificationEntity);
             return this.Ok();
         }
+        //private void AddGraphServices()
+        //{
+
+        //    var client = new ConfidentialClientApplicationOptions();
+
+        //    client.ClientId = configuration.GetValue<string>("MicrosoftAppId");
+        //    client.ClientSecret = configuration.GetValue<string>("MicrosoftAppPassword");
+        //    client.TenantId = configuration.GetValue<string>("TenantId");
+        //        });
+
+        //    // Graph Token Services
+        //    builder.Services.AddSingleton<IConfidentialClientApplication>(provider =>
+        //    {
+        //        var options = provider.GetRequiredService<IOptions<ConfidentialClientApplicationOptions>>();
+        //        return ConfidentialClientApplicationBuilder
+        //            .Create(options.Value.ClientId)
+        //            .WithClientSecret(options.Value.ClientSecret)
+        //            .WithAuthority(new Uri($"https://login.microsoftonline.com/{options.Value.TenantId}"))
+        //            .Build();
+        //    });
+
+        //    builder.Services.AddSingleton<IAuthenticationProvider, MsalAuthenticationProvider>();
+
+        //    // Add Graph Clients.
+        //    builder.Services.AddSingleton<IGraphServiceClient>(
+        //        serviceProvider =>
+        //        new GraphServiceClient(serviceProvider.GetRequiredService<IAuthenticationProvider>()));
+        //    builder.Services.AddSingleton<Beta.IGraphServiceClient>(
+        //        sp => new Beta.GraphServiceClient(sp.GetRequiredService<IAuthenticationProvider>()));
+
+        //    // Add Service Factory
+        //    builder.Services.AddSingleton<IGraphServiceFactory, GraphServiceFactory>();
+
+        //    // Add Graph Services
+        //    builder.Services.AddScoped<IUsersService>(sp => sp.GetRequiredService<IGraphServiceFactory>().GetUsersService());
+           
+        //}
+
         private async void GetUser()
         {
+            
             var users = userservice.GetUsersAsync(this.HttpContext.User?.Identity?.Name.ToString());
           
 
            await foreach (var c in users)
             {
-                CurrentUser = (c as User);
+                currentUser = (c as User);
             }
             System.Diagnostics.Debug.WriteLine("inside"+userservice.GetType());
             Console.WriteLine("inside" + userservice.GetType());
