@@ -180,6 +180,9 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator
             services.AddScoped<IGroupsService>(sp => sp.GetRequiredService<IGraphServiceFactory>().GetGroupsService());
             services.AddScoped<IAppCatalogService>(sp => sp.GetRequiredService<IGraphServiceFactory>().GetAppCatalogService());
 
+            // Add User service
+            services.AddScoped<IUsersService>(sp => sp.GetRequiredService<IGraphServiceFactory>().GetUsersService());
+
             // Add Application Insights telemetry.
             services.AddApplicationInsightsTelemetry();
 
