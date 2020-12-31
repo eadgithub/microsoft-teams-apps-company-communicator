@@ -45,7 +45,13 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Models
         /// Gets or sets the Button Link value.
         /// </summary>
         public string ButtonLink { get; set; }
+        /// <summary>
+        /// Gets or sets the Department Name value.
+        /// </summary>
         public string DepartmentName { get; set; }
+        /// <summary>
+        /// Gets or sets the Sender Name value.
+        /// </summary>
         public string SenderName { get; set; }
 
         /// <summary>

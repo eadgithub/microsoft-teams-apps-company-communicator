@@ -34,6 +34,8 @@ export interface IMessage {
     author?: string;
     buttonLink?: string;
     buttonTitle?: string;
+    senderName?: string;
+    departmentName?: string;
 }
 
 export interface SendConfirmationTaskModuleProps extends RouteComponentProps, WithTranslation {
@@ -78,7 +80,7 @@ class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskMod
         microsoftTeams.initialize();
 
         let params = this.props.match.params;
-
+        console.log("department before ", this.state.message.departmentName)
         if ('id' in params) {
             let id = params['id'];
             this.getItem(id).then(() => {
@@ -100,6 +102,7 @@ class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskMod
                             if (this.state.message.buttonTitle && this.state.message.buttonLink) {
                                 setCardBtn(this.card, this.state.message.buttonTitle, this.state.message.buttonLink);
                             }
+                            console.log("department after ", this.state.message.departmentName)
 
                             let adaptiveCard = new AdaptiveCards.AdaptiveCard();
                             adaptiveCard.parse(this.card);
@@ -166,6 +169,7 @@ class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskMod
     private onSendMessage = () => {
         let spanner = document.getElementsByClassName("sendingLoader");
         spanner[0].classList.remove("hiddenLoader");
+        console.log("Send Button Message department", this.state.message.departmentName)
         sendDraftNotification(this.state.message).then(() => {
             microsoftTeams.tasks.submitTask();
         });
