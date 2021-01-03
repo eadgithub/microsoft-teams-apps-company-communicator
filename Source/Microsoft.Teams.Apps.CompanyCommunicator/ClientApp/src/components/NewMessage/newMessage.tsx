@@ -129,8 +129,8 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
             selectedGroups: [],
             errorImageUrlMessage: "",
             errorButtonUrlMessage: "",
-            selectedIndex: 0,
-            itemListSelected: 0,
+            selectedIndex: -1,
+            itemListSelected: -1,
         }
     }
 
@@ -165,15 +165,15 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                     loader: false
                 }, () => {
                         console.log("State:", this.state);
-                    let adaptiveCard = new AdaptiveCards.AdaptiveCard();
-                    adaptiveCard.parse(this.state.card);
-                        let renderedCard = adaptiveCard.render();
-                        console.log("State:", document.getElementsByClassName('adaptiveCardContainer')[0]);
-                    document.getElementsByClassName('adaptiveCardContainer')[0].appendChild(renderedCard);
-                    if (this.state.btnLink) {
-                        let link = this.state.btnLink;
-                        adaptiveCard.onExecuteAction = function (action) { window.open(link, '_blank'); };
-                    }
+                    // let adaptiveCard = new AdaptiveCards.AdaptiveCard();
+                    // adaptiveCard.parse(this.state.card);
+                    //     let renderedCard = adaptiveCard.render();
+                   
+                    // document.getElementsByClassName('adaptiveCardContainer')[0].appendChild(renderedCard);
+                    // if (this.state.btnLink) {
+                    //     let link = this.state.btnLink;
+                    //     adaptiveCard.onExecuteAction = function (action) { window.open(link, '_blank'); };
+                    // }
                 })
             }
         });
@@ -234,6 +234,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         setVideoCardTitle(card, titleAsString);
         let imgUrl = "https://adaptivecards.io/content/poster-video.png";
         setCardPosterLink(card, imgUrl);
+        console.log("card value from SetDefaultVideo", card);
         setCardVideoLink(card, "https://adaptivecardsblob.blob.core.windows.net/assets/AdaptiveCardsOverviewVideo.mp4");
         setCardBtn(card, buttonTitleAsString, "https://adaptivecards.io");
     }
@@ -286,29 +287,41 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
             return error;
         }
     }
-    async itemSelected(e, NewProps) {
-        await this.setState({ itemListSelected: NewProps.selectedIndex });
+   async itemSelected(e, NewProps) {
+      await this.setState({ itemListSelected: NewProps.selectedIndex });
         console.log(this.state.itemListSelected);
-        switch (this.state.itemListSelected) {
-            case 0:
+        console.log("Outside Switch",NewProps.selectedIndex);
+        switch (NewProps.selectedIndex) {
+            case 2:
                 {
-                    console.log("Switch",this.state.itemListSelected);
-                    await this.setState({
-                        card: getInitAdaptiveVideoCard(this.localize)
-                    });
-                    this.setDefaultCard(this.card);
-                    console.log("Card", this.card);
-                    this.updateCard();
+                    console.log("Switch", NewProps.selectedIndex);
+                    this.setState({
+                        card: getInitAdaptiveCard(this.localize)
+                    },
+                        () => {
+                        console.log("Card value in Switch", this.state.card);
+                        this.setDefaultCard(this.state.card);
+                        
+
+                        this.updateCard();}
+                    );
+                    break;
+                    
                 }
             case 1:
                 {
                     console.log("Switch", this.state.itemListSelected);
-                    await this.setState({
+                   this.setState({
                         card:getInitAdaptiveVideoCard(this.localize)
-                    });
-                    this.setDefaultVideoCard(this.card);
-                    console.log("Card", this.card);
+                    },
+                () => {
+                    console.log("Card value in Switch", this.state.card);
+                    this.setDefaultVideoCard(this.state.card);
                     this.updateCard();
+                }
+                    );
+                   
+                 break;
                 }
         }
     }
@@ -437,7 +450,14 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                                     onChange={this.onAuthorChanged}
                                     autoComplete="off"
                                 />
-
+                                <Input
+                                    className="inputField"
+                                    value={this.state.author}
+                                    label={this.localize("Author")}
+                                    placeholder={this.localize("Author")}
+                                    onChange={this.onAuthorChanged}
+                                    autoComplete="off"
+                                />
                                 <Input
                                     className="inputField"
                                     value={this.state.btnTitle}
@@ -786,7 +806,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         }
         else {
             this.setState({
-                page: "AudienceSelection"
+                page: "CardSelection"
             }, () => {
                 this.updateCard();
             });

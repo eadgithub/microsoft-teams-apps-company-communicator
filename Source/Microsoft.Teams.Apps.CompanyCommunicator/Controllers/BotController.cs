@@ -28,6 +28,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
         /// <param name="bot">Company Communicator Bot instance.</param>
         public BotController(CompanyCommunicatorBotAdapter adapter, IBot bot)
         {
+           
             this.adapter = adapter;
             this.bot = bot;
         }

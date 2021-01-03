@@ -5,6 +5,7 @@
 namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Bot.Builder;
@@ -140,6 +141,15 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
             reply.TextFormat = "xml";
             await turnContext.SendActivityAsync(reply, cancellationToken);
         }
+        protected override async Task OnReactionsAddedAsync(IList<MessageReaction> messageReactions, ITurnContext<IMessageReactionActivity> turnContext, CancellationToken cancellationToken)
+        {
+            foreach (var reaction in messageReactions)
+            {
+                var newReaction = $"You reacted with '{reaction.Type}' to the following message: '{turnContext.Activity.ReplyToId}'";
+                var replyActivity = MessageFactory.Text(newReaction);
+                var resourceResponse = await turnContext.SendActivityAsync(replyActivity, cancellationToken);
+            }
+        }
 
         private bool IsTeamInformationUpdated(IConversationUpdateActivity activity)
         {
@@ -152,9 +162,12 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
             if (channelData == null)
             {
                 return false;
+                
             }
 
             return CompanyCommunicatorBot.TeamRenamedEventType.Equals(channelData.EventType, StringComparison.OrdinalIgnoreCase);
         }
+       
+        
     }
 }

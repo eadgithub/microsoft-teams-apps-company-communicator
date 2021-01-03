@@ -52,9 +52,6 @@ export const getCardVideoLink = (card: any) => {
 
 export const setCardVideoLink = (card: any, videoLink?: string) => {
     card.body[1].sources[0].url = videoLink;
-
-
-
 }
 export const getCardBtnTitle = (card: any) => {
     return card.actions[0].title;

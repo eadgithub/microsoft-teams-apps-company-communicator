@@ -54,7 +54,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
             {
                 return;
             }
-
+            
             switch (activity.Conversation.ConversationType)
             {
                 case TeamsDataCapture.ChannelType:
