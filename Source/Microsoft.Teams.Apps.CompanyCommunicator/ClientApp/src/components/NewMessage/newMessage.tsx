@@ -4,7 +4,7 @@ import { withTranslation, WithTranslation } from "react-i18next";
 import { Input, TextArea, Radiobutton, RadiobuttonGroup } from 'msteams-ui-components-react';
 import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
 import * as AdaptiveCards from "adaptivecards";
-import { Button, Loader, Dropdown, Text } from '@stardust-ui/react';
+import { Button, List, Loader, Dropdown, Text } from '@stardust-ui/react';
 import * as microsoftTeams from "@microsoft/teams-js";
 
 import './newMessage.scss';
@@ -17,6 +17,7 @@ import {
 import { getBaseUrl } from '../../configVariables';
 import { ImageUtil } from '../../utility/imageutility';
 import { TFunction } from "i18next";
+import { Console } from 'console';
 
 type dropdownItem = {
     key: string,
@@ -73,16 +74,22 @@ export interface formState {
     selectedGroups: dropdownItem[],
     errorImageUrlMessage: string,
     errorButtonUrlMessage: string,
+    selectedIndex: any,
+    itemListSelected: number,
+    
 }
+
 
 export interface INewMessageProps extends RouteComponentProps, WithTranslation {
     getDraftMessagesList?: any;
+    selectedIndex: any;
 }
 
 class NewMessage extends React.Component<INewMessageProps, formState> {
     readonly localize: TFunction;
     private card: any;
-
+    listItems = ['Default', 'Video', 'Informational'];
+    itemIndex = -1;
     constructor(props: INewMessageProps) {
         super(props);
         initializeIcons();
@@ -98,7 +105,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
             imageLink: "",
             btnTitle: "",
             card: this.card,
-            page: "CardCreation",
+            page: "TemplateSelection",
             teamsOptionSelected: true,
             rostersOptionSelected: false,
             allUsersOptionSelected: false,
@@ -118,6 +125,8 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
             selectedGroups: [],
             errorImageUrlMessage: "",
             errorButtonUrlMessage: "",
+            selectedIndex: 0,
+            itemListSelected: 0,
         }
     }
 
@@ -151,9 +160,11 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                     exists: false,
                     loader: false
                 }, () => {
+                        console.log("State:", this.state);
                     let adaptiveCard = new AdaptiveCards.AdaptiveCard();
                     adaptiveCard.parse(this.state.card);
-                    let renderedCard = adaptiveCard.render();
+                        let renderedCard = adaptiveCard.render();
+                        console.log("State:", document.getElementsByClassName('adaptiveCardContainer')[0]);
                     document.getElementsByClassName('adaptiveCardContainer')[0].appendChild(renderedCard);
                     if (this.state.btnLink) {
                         let link = this.state.btnLink;
@@ -261,7 +272,11 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
             return error;
         }
     }
-
+    async itemSelected(e, NewProps) {
+        await this.setState({ itemListSelected: NewProps.selectedIndex });
+        console.log(this.state.itemListSelected);
+        //this.getAdaptiveCard(this.state.itemListSelected);
+    }
     private getItem = async (id: number) => {
         try {
             const response = await getDraftNotification(id);
@@ -324,7 +339,28 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                 </div>
             );
         } else {
-            if (this.state.page === "CardCreation") {
+            if (this.state.page === "TemplateSelection")
+            {
+                return (
+                    <div className="taskModule">
+                   
+                        <div className="formContainer">
+                            <div className="formContentContainer">
+                                <List selectable onSelectedIndexChange={this.itemSelected.bind(this)} items={this.listItems} />
+                            </div>
+                            <div>
+                                <div className="adaptiveCardContainer" />
+                            </div>
+                        </div>
+                        <div className="footerContainer">
+                            <div className="buttonContainer">
+                                <Button content={this.localize("Next")}  id="saveBtn" onClick={this.onNext} primary />
+                            </div>
+                        </div>
+                    </div>
+                );
+            }
+                else if (this.state.page === "CardCreation") {
                 return (
                     <div className="taskModule">
                         <div className="formContainer">
@@ -687,19 +723,38 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
     }
 
     private onNext = (event: any) => {
-        this.setState({
-            page: "AudienceSelection"
-        }, () => {
-            this.updateCard();
-        });
+        console.log("Page:", this.state.page);
+        if (this.state.page === "TemplateSelection") {
+            this.setState({
+                page: "CardCreation"
+            }, () => {
+                this.updateCard();
+            });
+        }
+        else {
+            this.setState({
+                page: "AudienceSelection"
+            }, () => {
+                this.updateCard();
+            });
+        }
     }
 
     private onBack = (event: any) => {
-        this.setState({
-            page: "CardCreation"
-        }, () => {
-            this.updateCard();
-        });
+        if (this.state.page === "CardCreation") {
+            this.setState({
+                page: "TemplateSelection"
+            }, () => {
+                this.updateCard();
+            });
+        }
+        else {
+            this.setState({
+                page: "AudienceSelection"
+            }, () => {
+                this.updateCard();
+            });
+        }
     }
 
     private onTitleChanged = (event: any) => {

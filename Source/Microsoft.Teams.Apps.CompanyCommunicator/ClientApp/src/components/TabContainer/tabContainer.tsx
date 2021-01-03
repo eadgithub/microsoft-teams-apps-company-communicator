@@ -34,7 +34,7 @@ class TabContainer extends React.Component<ITaskInfoProps, ITabContainerState> {
 		super(props);
 		this.localize = this.props.t;
 		this.state = {
-			url: getBaseUrl() + '/template?locale={locale}'
+			url: getBaseUrl() + '/newmessage?locale={locale}'
 		};
 		this.escFunction = this.escFunction.bind(this);
 	}
