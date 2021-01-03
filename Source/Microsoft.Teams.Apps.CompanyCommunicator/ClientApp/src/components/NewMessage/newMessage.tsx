@@ -14,6 +14,10 @@ import {
     getInitAdaptiveCard, setCardTitle, setCardImageLink, setCardSummary,
     setCardAuthor, setCardBtn
 } from '../AdaptiveCard/adaptiveCard';
+import {
+    getInitAdaptiveVideoCard, setVideoCardTitle, setCardPosterLink, setCardVideoLink,
+
+} from '../AdaptiveCard/adaptiveCardVideo';
 import { getBaseUrl } from '../../configVariables';
 import { ImageUtil } from '../../utility/imageutility';
 import { TFunction } from "i18next";
@@ -223,6 +227,16 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         setCardAuthor(card, authorAsString);
         setCardBtn(card, buttonTitleAsString, "https://adaptivecards.io");
     }
+    public setDefaultVideoCard = (card: any) => {
+        const titleAsString = this.localize("TitleText");
+        const buttonTitleAsString = this.localize("ButtonTitle");
+
+        setVideoCardTitle(card, titleAsString);
+        let imgUrl = "https://adaptivecards.io/content/poster-video.png";
+        setCardPosterLink(card, imgUrl);
+        setCardVideoLink(card, "https://adaptivecardsblob.blob.core.windows.net/assets/AdaptiveCardsOverviewVideo.mp4");
+        setCardBtn(card, buttonTitleAsString, "https://adaptivecards.io");
+    }
 
     private getTeamList = async () => {
         try {
@@ -275,7 +289,28 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
     async itemSelected(e, NewProps) {
         await this.setState({ itemListSelected: NewProps.selectedIndex });
         console.log(this.state.itemListSelected);
-        //this.getAdaptiveCard(this.state.itemListSelected);
+        switch (this.state.itemListSelected) {
+            case 0:
+                {
+                    console.log("Switch",this.state.itemListSelected);
+                    await this.setState({
+                        card: getInitAdaptiveVideoCard(this.localize)
+                    });
+                    this.setDefaultCard(this.card);
+                    console.log("Card", this.card);
+                    this.updateCard();
+                }
+            case 1:
+                {
+                    console.log("Switch", this.state.itemListSelected);
+                    await this.setState({
+                        card:getInitAdaptiveVideoCard(this.localize)
+                    });
+                    this.setDefaultVideoCard(this.card);
+                    console.log("Card", this.card);
+                    this.updateCard();
+                }
+        }
     }
     private getItem = async (id: number) => {
         try {
@@ -428,6 +463,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
 
                         <div className="footerContainer">
                             <div className="buttonContainer">
+                                <Button content={this.localize("Back")} onClick={this.onBack} secondary />
                                 <Button content={this.localize("Next")} disabled={this.isNextBtnDisabled()} id="saveBtn" onClick={this.onNext} primary />
                             </div>
                         </div>

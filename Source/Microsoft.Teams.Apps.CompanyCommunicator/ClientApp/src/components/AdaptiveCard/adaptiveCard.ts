@@ -56,6 +56,7 @@ export const setCardImageLink = (card: any, imageLink?: string) => {
     card.body[1].url = imageLink;
 }
 
+
 export const getCardSummary = (card: any) => {
     return card.body[2].text;
 }
