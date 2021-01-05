@@ -5,7 +5,7 @@ import { TooltipHost } from 'office-ui-fabric-react';
 import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
 import { Icon, Loader, List, Flex, Text } from '@stardust-ui/react';
 import * as microsoftTeams from "@microsoft/teams-js";
-
+import { ITabContainerState } from '../TabContainer/tabContainer';
 import { selectMessage, getMessagesList, getDraftMessagesList } from '../../actions';
 import { getBaseUrl } from '../../configVariables';
 import Overflow from '../OverFlow/sentMessageOverflow';
@@ -65,8 +65,10 @@ class Messages extends React.Component<IMessageProps, IMessageState> {
   public componentDidMount() {
     microsoftTeams.initialize();
     this.props.getMessagesList();
-    document.addEventListener("keydown", this.escFunction, false);
-    this.interval = setInterval(() => {
+      document.addEventListener("keydown", this.escFunction, false);
+      
+      this.interval = setInterval(() => {
+          //console.log("searchTextValue", search)
       this.props.getMessagesList();
     }, 60000);
   }

@@ -150,6 +150,15 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
                 var resourceResponse = await turnContext.SendActivityAsync(replyActivity, cancellationToken);
             }
         }
+        protected override async Task OnReactionsRemovedAsync(IList<MessageReaction> messageReactions, ITurnContext<IMessageReactionActivity> turnContext, CancellationToken cancellationToken)
+        {
+            foreach (var reaction in messageReactions)
+            {
+                var newReaction = $"You removed a reaction of type '{reaction.Type}' to the following message: '{turnContext.Activity.Conversation.Id}'";
+                var replyActivity = MessageFactory.Text(newReaction);
+                var resourceResponse = await turnContext.SendActivityAsync(replyActivity, cancellationToken);
+            }
+        }
 
         private bool IsTeamInformationUpdated(IConversationUpdateActivity activity)
         {

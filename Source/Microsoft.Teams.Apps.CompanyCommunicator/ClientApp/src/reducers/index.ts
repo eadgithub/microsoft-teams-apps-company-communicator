@@ -13,8 +13,13 @@ export const messagesListReducer = (messages = [], action: { type: string; paylo
 	if (action.type === 'FETCH_MESSAGES') {
 		return action.payload;
 	}
+	if (action.type === 'SEARCH') {
+		return action.payload;
+    }
 	return messages;
 };
+
+
 
 export const draftmessagesListReducer = (draftMessages = [], action: { type: string; payload: any }) => {
 	if (action.type === 'FETCH_DRAFTMESSAGES') {

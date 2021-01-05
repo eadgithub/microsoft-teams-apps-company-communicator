@@ -31,8 +31,10 @@ export interface ITabContainerState {
 
 class TabContainer extends React.Component<ITaskInfoProps, ITabContainerState> {
 	readonly localize: TFunction;
+	 isContent: boolean;
 	constructor(props: ITaskInfoProps) {
 		super(props);
+		this.isContent = false;
 		this.localize = this.props.t;
 		this.state = {
 			url: getBaseUrl() + '/newmessage?locale={locale}',
@@ -40,7 +42,9 @@ class TabContainer extends React.Component<ITaskInfoProps, ITabContainerState> {
 		};
 		this.escFunction = this.escFunction.bind(this);
 	}
-
+	public checkSearchContent() {
+		return this.isContent;
+    }
 	public componentDidMount() {
 		microsoftTeams.initialize();
 		//- Handle the Esc key
@@ -57,8 +61,10 @@ class TabContainer extends React.Component<ITaskInfoProps, ITabContainerState> {
 		}
 	}
 
-	public searchTextChanged(e, newProp) {
-
+	public async searchTextChanged(e) {
+		await this.setState({
+			searchText: e.value
+		}) 
 	}
 
 	public render(): JSX.Element {

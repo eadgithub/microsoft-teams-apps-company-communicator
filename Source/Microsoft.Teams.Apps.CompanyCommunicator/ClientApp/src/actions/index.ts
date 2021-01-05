@@ -1,5 +1,5 @@
 import { formatDate } from '../i18n';
-import { getSentNotifications, getDraftNotifications } from '../apis/messageListApi';
+import { getSentNotifications, getDraftNotifications, getFilteredSentNotifications } from '../apis/messageListApi';
 
 type Notification = {
     createdDateTime: string,
@@ -35,6 +35,11 @@ export const getMessagesList = () => async (dispatch: any) => {
         
     });
     dispatch({ type: 'FETCH_MESSAGES', payload: notificationList });
+};
+
+export const getFilteredList = () => async (dispatch: any, query:string) => {
+    const response = await getFilteredSentNotifications(query);
+    dispatch({ type: 'SEARCH', payload: response.data });
 };
 
 export const getDraftMessagesList = () => async (dispatch: any) => {
