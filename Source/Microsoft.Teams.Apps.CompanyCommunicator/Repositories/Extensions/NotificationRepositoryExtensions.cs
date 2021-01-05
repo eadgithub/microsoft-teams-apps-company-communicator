@@ -49,6 +49,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Repositories.Extensions
                 AllUsers = notification.AllUsers,
                 DepartmentName=user.Department,
                 SenderName=user.DisplayName,
+                videoUrl=notification.VideoUrl,
+                selectedTemplate=notification.SelectedTemplate,
             };
 
             await notificationRepository.CreateOrUpdateAsync(notificationEntity);

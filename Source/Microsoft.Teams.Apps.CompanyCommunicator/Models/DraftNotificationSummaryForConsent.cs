@@ -35,5 +35,6 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Models
         /// Gets or sets a value indicating whether the All Users option is selected.
         /// </summary>
         public bool AllUsers { get; set; }
+        public int selectedTemplate { get; set; }
     }
 }

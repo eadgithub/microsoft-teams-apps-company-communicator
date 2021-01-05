@@ -61,6 +61,17 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.Notificat
 
             return result;
         }
+        /// <summary>
+        /// Searches the table storage for provided query.
+        /// </summary>
+        /// <returns>Search method.</returns>
+        public async Task<IEnumerable<NotificationDataEntity>> GetQueriedSentNotificationsAsync(string searchQuery)
+        {
+            
+            IEnumerable<NotificationDataEntity> result = await this.GetAllAsync(NotificationDataTableNames.SentNotificationsPartition);
+            var filteredResult = new List<NotificationDataEntity>(result).FindAll(x => x.SenderName == searchQuery || x.DepartmentName == searchQuery || x.Title == searchQuery);
+            return filteredResult;
+        }
 
         /// <summary>
         /// Move a draft notification from draft to sent partition.
@@ -100,6 +111,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.Notificat
                     Rosters = draftNotificationEntity.Rosters,
                     Groups = draftNotificationEntity.Groups,
                     AllUsers = draftNotificationEntity.AllUsers,
+                    selectedTemplate=draftNotificationEntity.selectedTemplate,
+                    videoUrl=draftNotificationEntity.videoUrl,
                     MessageVersion = draftNotificationEntity.MessageVersion,
                     Succeeded = 0,
                     Failed = 0,

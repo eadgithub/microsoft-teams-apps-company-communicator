@@ -41,8 +41,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Prep.Func.PreparingToSend
         public async Task RunAsync(
             [ActivityTrigger] NotificationDataEntity notification)
         {
-            var serializedContent = this.adaptiveCardCreator.CreateAdaptiveCard(notification).ToJson();
-
+            //var serializedContent = this.adaptiveCardCreator.CreateAdaptiveCard(notification).ToJson();
+            var serializedContent = this.adaptiveCardCreator.GetCardJson(notification);
             var sendingNotification = new SendingNotificationDataEntity
             {
                 PartitionKey = NotificationDataTableNames.SendingNotificationsPartition,

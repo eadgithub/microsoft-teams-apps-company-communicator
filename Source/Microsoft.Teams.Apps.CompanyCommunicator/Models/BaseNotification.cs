@@ -37,18 +37,31 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Models
         public string Author { get; set; }
 
         /// <summary>
+        /// Gets or sets the VideoUrl value.
+        /// </summary>
+        public string VideoUrl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected template.
+        /// </summary>
+        public int SelectedTemplate { get; set; }
+
+        /// <summary>
         /// Gets or sets the Button Title value.
         /// </summary>
+        ///
         public string ButtonTitle { get; set; }
 
         /// <summary>
         /// Gets or sets the Button Link value.
         /// </summary>
         public string ButtonLink { get; set; }
+
         /// <summary>
         /// Gets or sets the Department Name value.
         /// </summary>
         public string DepartmentName { get; set; }
+
         /// <summary>
         /// Gets or sets the Sender Name value.
         /// </summary>

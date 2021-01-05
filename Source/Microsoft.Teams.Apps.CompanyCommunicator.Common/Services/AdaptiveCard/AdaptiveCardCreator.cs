@@ -5,6 +5,7 @@
 namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
 {
     using System;
+    using System.Collections.Generic;
     using AdaptiveCards;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.NotificationData;
 
@@ -100,6 +101,89 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
             }
 
             return card;
+        }
+        public AdaptiveCard CreateAdaptiveVideoCard(
+            string title,
+            string imageUrl,
+            string videoUrl)
+        {
+            var version = new AdaptiveSchemaVersion(1, 1);
+            AdaptiveCard card = new AdaptiveCard(version);
+
+            card.Body.Add(new AdaptiveTextBlock()
+            {
+                Text = title,
+                Size = AdaptiveTextSize.ExtraLarge,
+                Weight = AdaptiveTextWeight.Bolder,
+                Wrap = true,
+                HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
+            });
+
+            if (!string.IsNullOrWhiteSpace(imageUrl))
+            {
+                card.Body.Add(new AdaptiveMedia()
+                {
+                 Sources = new List<AdaptiveMediaSource>() { new AdaptiveMediaSource("video/mp4", videoUrl) },
+                 Poster = imageUrl,
+                 AltText = string.Empty,
+                });
+            }
+
+            return card;
+        }
+        public AdaptiveCard CreateAdaptiveBannerCard(string imageUrl)
+        {
+            var version = new AdaptiveSchemaVersion(1, 1);
+            AdaptiveCard card = new AdaptiveCard(version);
+            card.BackgroundImage = new AdaptiveBackgroundImage() { Url = new Uri(imageUrl, UriKind.RelativeOrAbsolute), FillMode = AdaptiveImageFillMode.Cover };
+            card.PixelMinHeight = 800;
+            if (!string.IsNullOrWhiteSpace(imageUrl))
+            {
+                card.Body.Add(new AdaptiveImage()
+                {
+                    Url= new Uri("https://blcompanycommunicator-test.azurewebsites.net/image/transparentbanner.png", UriKind.RelativeOrAbsolute),
+                    PixelWidth=500,
+                    PixelHeight=800,
+                    Size=AdaptiveImageSize.Stretch,
+                    AltText = string.Empty,
+                });
+            }
+
+            return card;
+        }
+        public string GetCardJson(NotificationDataEntity notificationDataEntity)
+        {
+            switch(notificationDataEntity.selectedTemplate)
+            {
+                case 0:
+                    {
+                        var x=this.CreateAdaptiveCard(
+                notificationDataEntity.Title,
+                notificationDataEntity.ImageLink,
+                notificationDataEntity.Summary,
+                notificationDataEntity.Author,
+                notificationDataEntity.ButtonTitle,
+                notificationDataEntity.ButtonLink);
+                        return x.ToJson();
+                        break;
+                    }
+                case 1:
+                    {
+                        var x = this.CreateAdaptiveVideoCard(
+                notificationDataEntity.Title,
+                notificationDataEntity.ImageLink,
+                notificationDataEntity.videoUrl);
+                        return x.ToJson();
+                        break;
+                    }
+                case 2:
+                    {
+                        var x=CreateAdaptiveBannerCard(notificationDataEntity.ImageLink);
+                        return x.ToJson();
+                        break;
+                    }     
+            }
+            return null;
         }
     }
 }

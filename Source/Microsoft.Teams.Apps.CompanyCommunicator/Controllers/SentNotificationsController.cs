@@ -174,13 +174,40 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
 
             return result;
         }
+        [HttpGet("{query}")]
+        public async Task<IEnumerable<SentNotificationSummary>> GetQueryResultAsync(string query)
+        {
+            var notificationEntities = await this.notificationDataRepository.GetQueriedSentNotificationsAsync(query);
+            var result = new List<SentNotificationSummary>();
+            foreach (var notificationEntity in notificationEntities)
+            {
+                var summary = new SentNotificationSummary
+                {
+                    Id = notificationEntity.Id,
+                    Title = notificationEntity.Title,
+                    CreatedDateTime = notificationEntity.CreatedDate,
+                    SentDate = notificationEntity.SentDate,
+                    Succeeded = notificationEntity.Succeeded,
+                    Failed = notificationEntity.Failed,
+                    Unknown = this.GetUnknownCount(notificationEntity),
+                    TotalMessageCount = notificationEntity.TotalMessageCount,
+                    SendingStartedDate = notificationEntity.SendingStartedDate,
+                    Status = notificationEntity.GetStatus(),
+                    SenderName = notificationEntity.SenderName,
+                    DepartmentName = notificationEntity.DepartmentName,
+                };
 
-        /// <summary>
-        /// Get a sent notification by Id.
-        /// </summary>
-        /// <param name="id">Id of the requested sent notification.</param>
-        /// <returns>Required sent notification.</returns>
-        [HttpGet("{id}")]
+                result.Add(summary);
+            }
+            return result;
+        }
+
+            /// <summary>
+            /// Get a sent notification by Id.
+            /// </summary>
+            /// <param name="id">Id of the requested sent notification.</param>
+            /// <returns>Required sent notification.</returns>
+            [HttpGet("{id}")]
         public async Task<IActionResult> GetSentNotificationByIdAsync(string id)
         {
             var notificationEntity = await this.notificationDataRepository.GetAsync(

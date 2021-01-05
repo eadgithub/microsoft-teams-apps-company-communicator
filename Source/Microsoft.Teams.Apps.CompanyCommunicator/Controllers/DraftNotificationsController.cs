@@ -153,12 +153,15 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
                 CreatedBy = this.HttpContext.User?.Identity?.Name,
                 CreatedDate = DateTime.UtcNow,
                 IsDraft = true,
+                videoUrl = notification.VideoUrl,
+                selectedTemplate = notification.SelectedTemplate,
                 Teams = notification.Teams,
                 Rosters = notification.Rosters,
                 Groups = notification.Groups,
                 AllUsers = notification.AllUsers,
                 SenderName = currentUser.DisplayName,
                 DepartmentName = currentUser.Department,
+                
             };
 
             await this.notificationDataRepository.CreateOrUpdateAsync(notificationEntity);
@@ -253,6 +256,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
                 AllUsers = notificationEntity.AllUsers,
                 DepartmentName=notificationEntity.DepartmentName,
                 SenderName=notificationEntity.SenderName,
+                VideoUrl=notificationEntity.videoUrl,
+                SelectedTemplate=notificationEntity.selectedTemplate,
             };
 
             return this.Ok(result);
@@ -287,6 +292,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
                 RosterNames = await this.teamDataRepository.GetTeamNamesByIdsAsync(notificationEntity.Rosters),
                 GroupNames = groupNames,
                 AllUsers = notificationEntity.AllUsers,
+                selectedTemplate=notificationEntity.selectedTemplate,
             };
 
             return this.Ok(result);

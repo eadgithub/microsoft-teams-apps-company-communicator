@@ -5,7 +5,7 @@ import DraftMessages from '../DraftMessages/draftMessages';
 import './tabContainer.scss';
 import * as microsoftTeams from '@microsoft/teams-js';
 import { getBaseUrl } from '../../configVariables';
-import { Accordion, Button } from '@stardust-ui/react';
+import { Accordion, Button, Input } from '@stardust-ui/react';
 import { getDraftMessagesList } from '../../actions';
 import { connect } from 'react-redux';
 import { TFunction } from 'i18next';
@@ -26,6 +26,7 @@ export interface ITaskInfoProps extends WithTranslation {
 
 export interface ITabContainerState {
 	url: string;
+	searchText: string;
 }
 
 class TabContainer extends React.Component<ITaskInfoProps, ITabContainerState> {
@@ -34,7 +35,8 @@ class TabContainer extends React.Component<ITaskInfoProps, ITabContainerState> {
 		super(props);
 		this.localize = this.props.t;
 		this.state = {
-			url: getBaseUrl() + '/newmessage?locale={locale}'
+			url: getBaseUrl() + '/newmessage?locale={locale}',
+			searchText: ''
 		};
 		this.escFunction = this.escFunction.bind(this);
 	}
@@ -55,6 +57,10 @@ class TabContainer extends React.Component<ITaskInfoProps, ITabContainerState> {
 		}
 	}
 
+	public searchTextChanged(e, newProp) {
+
+	}
+
 	public render(): JSX.Element {
 		const panels = [
 			{
@@ -73,8 +79,12 @@ class TabContainer extends React.Component<ITaskInfoProps, ITabContainerState> {
 				content: {
 					key: 'draft',
 					content: (
-						<div className="messages">
-							<Messages />
+						<div>
+							
+							<div className="messages">
+							<Input  placeholder="Search" icon='search' className="searchBox" onChange={this.searchTextChanged.bind(this)} />
+								<Messages />
+							</div>
 						</div>
 					)
 				}
@@ -96,7 +106,7 @@ class TabContainer extends React.Component<ITaskInfoProps, ITabContainerState> {
 		let taskInfo: ITaskInfo = {
 			url: this.state.url,
 			title: this.localize('NewMessage'),
-			height: 530,
+			height: 800,
 			width: 1000,
 			fallbackUrl: this.state.url
 		};

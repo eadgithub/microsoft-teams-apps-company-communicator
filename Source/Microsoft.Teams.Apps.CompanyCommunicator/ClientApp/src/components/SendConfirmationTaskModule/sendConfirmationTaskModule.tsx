@@ -11,6 +11,9 @@ import {
     getInitAdaptiveCard, setCardTitle, setCardImageLink, setCardSummary,
     setCardAuthor, setCardBtn
 } from '../AdaptiveCard/adaptiveCard';
+import {
+    getInitAdaptiveVideoCard, setVideoCardTitle, setCardPosterLink, setCardVideoLink,
+} from '../AdaptiveCard/adaptiveCardVideo';
 import { ImageUtil } from '../../utility/imageutility';
 import { TFunction } from "i18next";
 
@@ -36,6 +39,8 @@ export interface IMessage {
     buttonTitle?: string;
     senderName?: string;
     departmentName?: string;
+    videoUrl: string;
+
 }
 
 export interface SendConfirmationTaskModuleProps extends RouteComponentProps, WithTranslation {
@@ -49,13 +54,15 @@ export interface IStatusState {
     groupNames: string[];
     allUsers: boolean;
     messageId: number;
+    selectedTemplate: number;
 }
 
 class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskModuleProps, IStatusState> {
     readonly localize: TFunction;
     private initMessage = {
         id: "",
-        title: ""
+        title: "",
+        videoUrl:""
     };
 
     private card: any;
@@ -73,6 +80,7 @@ class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskMod
             groupNames: [],
             allUsers: false,
             messageId: 0,
+            selectedTemplate:0,
         };
     }
 
@@ -80,7 +88,7 @@ class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskMod
         microsoftTeams.initialize();
 
         let params = this.props.match.params;
-        console.log("department before ", this.state.message.departmentName)
+        
         if ('id' in params) {
             let id = params['id'];
             this.getItem(id).then(() => {
@@ -91,18 +99,32 @@ class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskMod
                         groupNames: response.data.groupNames.sort(),
                         allUsers: response.data.allUsers,
                         messageId: id,
+                        selectedTemplate: response.data.selectedTemplate,
+                        
                     }, () => {
+                            console.log("Response data:", response.data);
                         this.setState({
                             loader: false
                         }, () => {
-                            setCardTitle(this.card, this.state.message.title);
-                            setCardImageLink(this.card, this.state.message.imageLink);
-                            setCardSummary(this.card, this.state.message.summary);
-                            setCardAuthor(this.card, this.state.message.author);
-                            if (this.state.message.buttonTitle && this.state.message.buttonLink) {
-                                setCardBtn(this.card, this.state.message.buttonTitle, this.state.message.buttonLink);
-                            }
-                            console.log("department after ", this.state.message.departmentName)
+                                console.log("Send Confirmation template:", this.state.selectedTemplate );
+                                if (response.data.selectedTemplate === 0) {
+
+                                    setCardTitle(this.card, this.state.message.title);
+                                    setCardImageLink(this.card, this.state.message.imageLink);
+                                    setCardSummary(this.card, this.state.message.summary);
+                                    setCardAuthor(this.card, this.state.message.author);
+                                    if (this.state.message.buttonTitle && this.state.message.buttonLink) {
+                                        setCardBtn(this.card, this.state.message.buttonTitle, this.state.message.buttonLink);
+                                    }
+                                }
+                                else
+                                    if (response.data.selectedTemplate === 1) {
+                                        this.card = getInitAdaptiveVideoCard(this.localize);
+                                        setVideoCardTitle(this.card, this.state.message.title);
+                                        setCardVideoLink(this.card, this.state.message.videoUrl);
+                                        setCardPosterLink(this.card, this.state.message.imageLink);
+                                    }
+                            console.log("Confirmation Page Card ", this.card)
 
                             let adaptiveCard = new AdaptiveCards.AdaptiveCard();
                             adaptiveCard.parse(this.card);
@@ -169,7 +191,7 @@ class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskMod
     private onSendMessage = () => {
         let spanner = document.getElementsByClassName("sendingLoader");
         spanner[0].classList.remove("hiddenLoader");
-        console.log("Send Button Message department", this.state.message.departmentName)
+        console.log("Send Button Message", this.state.message)
         sendDraftNotification(this.state.message).then(() => {
             microsoftTeams.tasks.submitTask();
         });

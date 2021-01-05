@@ -27,6 +27,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.Notificat
         public string SenderName { get; set; }
 
         public string DepartmentName { get; set; }
+        public string videoUrl { get; set; }
+        public int selectedTemplate { get; set; }
         /// <summary>
         /// Gets or sets the title text of the notification's content.
         /// </summary>

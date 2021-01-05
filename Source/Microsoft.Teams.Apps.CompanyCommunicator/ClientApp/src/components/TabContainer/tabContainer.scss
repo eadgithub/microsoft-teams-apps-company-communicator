@@ -4,7 +4,10 @@
         display: block;
         margin: 0.5rem 0rem;
     }
-
+    .searchBox {
+        float: right;
+        vertical-align:top;
+    }
     .messageContainer {
         clear: both;
         display: block;
