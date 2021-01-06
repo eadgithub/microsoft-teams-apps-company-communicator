@@ -119,16 +119,17 @@ class Messages extends React.Component<IMessageProps, IMessageState> {
 
 		const allFilteredMessages = [ ...label, ...filteredlist ];
 		const allMessages = [ ...label, ...outList ];
-		this.searchedValue = this.props.searchedText;
+		//this.searchedValue = this.props.searchedText;
 
 		if (this.state.loader) {
 			return <Loader />;
 		} else if (this.state.message.length === 0) {
 			return <div className="results">{this.localize('EmptySentMessages')}</div>;
-		} else if (this.searchedValue.length > 3) {
-			console.log('ooops');
-			return <List selectable items={allFilteredMessages} className="list" />;
 		} else {
+			// else if (this.searchedValue.length > 3) {
+			// 	console.log('ooops');
+			// 	return <List selectable items={allFilteredMessages} className="list" />;
+			// }
 			return <List selectable items={allMessages} className="list" />;
 		}
 	}
