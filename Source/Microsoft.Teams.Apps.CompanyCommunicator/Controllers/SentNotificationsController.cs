@@ -174,7 +174,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
 
             return result;
         }
-        [HttpGet("/search/{query}")]
+        [HttpGet("search/{query}")]
         public async Task<IEnumerable<SentNotificationSummary>> GetQueryResultAsync(string query)
         {
             var notificationEntities = await this.notificationDataRepository.GetQueriedSentNotificationsAsync(query);

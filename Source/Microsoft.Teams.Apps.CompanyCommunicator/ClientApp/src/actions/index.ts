@@ -38,11 +38,12 @@ export const getMessagesList = () => async (dispatch: any) => {
 export const getFilteredList = (query: string) => async (dispatch: any) => {
 	const response = await getFilteredSentNotifications(query);
 	const notificationList: Notification[] = response.data;
+	console.log("Filtered:", notificationList);
 	notificationList.forEach((notification) => {
 		notification.sendingStartedDate = formatDate(notification.sendingStartedDate);
 		notification.sentDate = formatDate(notification.sentDate);
 	});
-	console.log("Filtered:", notificationList);
+	
 	dispatch({ type: 'FETCH_FILTEREDMESSAGES', payload: notificationList });
 };
 
