@@ -6,7 +6,7 @@ import './tabContainer.scss';
 import * as microsoftTeams from '@microsoft/teams-js';
 import { getBaseUrl } from '../../configVariables';
 import { Accordion, Button, Input } from '@stardust-ui/react';
-import { getDraftMessagesList } from '../../actions';
+import { getDraftMessagesList, searchBarChanged } from '../../actions';
 import { connect } from 'react-redux';
 import { TFunction } from 'i18next';
 
@@ -22,6 +22,7 @@ interface ITaskInfo {
 
 export interface ITaskInfoProps extends WithTranslation {
 	getDraftMessagesList?: any;
+	searchBarChanged?: any;
 }
 
 export interface ITabContainerState {
@@ -31,7 +32,7 @@ export interface ITabContainerState {
 
 class TabContainer extends React.Component<ITaskInfoProps, ITabContainerState> {
 	readonly localize: TFunction;
-	 isContent: boolean;
+	isContent: boolean;
 	constructor(props: ITaskInfoProps) {
 		super(props);
 		this.isContent = false;
@@ -44,7 +45,7 @@ class TabContainer extends React.Component<ITaskInfoProps, ITabContainerState> {
 	}
 	public checkSearchContent() {
 		return this.isContent;
-    }
+	}
 	public componentDidMount() {
 		microsoftTeams.initialize();
 		//- Handle the Esc key
@@ -61,10 +62,12 @@ class TabContainer extends React.Component<ITaskInfoProps, ITabContainerState> {
 		}
 	}
 
-	public async searchTextChanged(e) {
-		await this.setState({
-			searchText: e.value
-		}) 
+	public async searchTextChanged(e, newProp) {
+		this.props.searchBarChanged(newProp);
+		//console.log(newProp.value);
+		// await this.setState({
+		// 	searchText: e.value
+		// });
 	}
 
 	public render(): JSX.Element {
@@ -86,9 +89,13 @@ class TabContainer extends React.Component<ITaskInfoProps, ITabContainerState> {
 					key: 'draft',
 					content: (
 						<div>
-							
 							<div className="messages">
-							<Input  placeholder="Search" icon='search' className="searchBox" onChange={this.searchTextChanged.bind(this)} />
+								<Input
+									placeholder="Search"
+									icon="search"
+									className="searchBox"
+									onChange={this.searchTextChanged.bind(this)}
+								/>
 								<Messages />
 							</div>
 						</div>
@@ -130,4 +137,4 @@ const mapStateToProps = (state: any) => {
 };
 
 const tabContainerWithTranslation = withTranslation()(TabContainer);
-export default connect(mapStateToProps, { getDraftMessagesList })(tabContainerWithTranslation);
+export default connect(mapStateToProps, { getDraftMessagesList, searchBarChanged })(tabContainerWithTranslation);
