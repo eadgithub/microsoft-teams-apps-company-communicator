@@ -6,7 +6,7 @@ import './tabContainer.scss';
 import * as microsoftTeams from '@microsoft/teams-js';
 import { getBaseUrl } from '../../configVariables';
 import { Accordion, Button, Input } from '@stardust-ui/react';
-import { getDraftMessagesList, searchBarChanged } from '../../actions';
+import { getDraftMessagesList, searchBarChanged, getFilteredList } from '../../actions';
 import { connect } from 'react-redux';
 import { TFunction } from 'i18next';
 
@@ -23,6 +23,7 @@ interface ITaskInfo {
 export interface ITaskInfoProps extends WithTranslation {
 	getDraftMessagesList?: any;
 	searchBarChanged?: any;
+	getFilteredList?: any;
 }
 
 export interface ITabContainerState {
@@ -63,11 +64,11 @@ class TabContainer extends React.Component<ITaskInfoProps, ITabContainerState> {
 	}
 
 	public async searchTextChanged(e, newProp) {
-		this.props.searchBarChanged(newProp);
-		//console.log(newProp.value);
-		// await this.setState({
-		// 	searchText: e.value
-		// });
+		var searchttxt = new String(newProp.value);
+		if (searchttxt.length >= 3) {
+			this.props.getFilteredList(newProp.value);
+			this.props.searchBarChanged(newProp);
+		}
 	}
 
 	public render(): JSX.Element {
@@ -137,4 +138,6 @@ const mapStateToProps = (state: any) => {
 };
 
 const tabContainerWithTranslation = withTranslation()(TabContainer);
-export default connect(mapStateToProps, { getDraftMessagesList, searchBarChanged })(tabContainerWithTranslation);
+export default connect(mapStateToProps, { getDraftMessagesList, searchBarChanged, getFilteredList })(
+	tabContainerWithTranslation
+);

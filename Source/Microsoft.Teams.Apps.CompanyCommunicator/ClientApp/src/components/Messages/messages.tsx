@@ -137,7 +137,7 @@ class Messages extends React.Component<IMessageProps, IMessageState> {
 
 	private getFilteredList = () => {
 		//console.log(this.props.searchedText);
-		this.props.getFilteredList(this.props.searchedText);
+		
 	};
 
 	private processLabels = () => {
