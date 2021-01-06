@@ -55,13 +55,13 @@ class Messages extends React.Component<IMessageProps, IMessageState> {
 	readonly localize: TFunction;
 	private interval: any;
 	private isOpenTaskModuleAllowed: boolean;
-	private searchedValue: string;
+	//private searchedValue: string;
 	constructor(props: IMessageProps) {
 		super(props);
 		initializeIcons();
 		this.localize = this.props.t;
 		this.isOpenTaskModuleAllowed = true;
-		this.searchedValue = '';
+
 		this.state = {
 			message: this.props.messagesList,
 			loader: true,
@@ -74,6 +74,7 @@ class Messages extends React.Component<IMessageProps, IMessageState> {
 	public componentDidMount() {
 		microsoftTeams.initialize();
 		this.props.getMessagesList();
+
 		document.addEventListener('keydown', this.escFunction, false);
 
 		this.interval = setInterval(() => {
@@ -119,23 +120,23 @@ class Messages extends React.Component<IMessageProps, IMessageState> {
 
 		const allFilteredMessages = [ ...label, ...filteredlist ];
 		const allMessages = [ ...label, ...outList ];
-		//this.searchedValue = this.props.searchedText;
+		var searchedValue = new String(this.props.searchedText);
 
 		if (this.state.loader) {
 			return <Loader />;
 		} else if (this.state.message.length === 0) {
 			return <div className="results">{this.localize('EmptySentMessages')}</div>;
+		} else if (this.props.searchedText != null && searchedValue.length >= 3) {
+			console.log('SearchedValue Length ', searchedValue);
+			return <List selectable items={allFilteredMessages} className="list" />;
 		} else {
-			// else if (this.searchedValue.length > 3) {
-			// 	console.log('ooops');
-			// 	return <List selectable items={allFilteredMessages} className="list" />;
-			// }
 			return <List selectable items={allMessages} className="list" />;
 		}
 	}
 
 	private getFilteredList = () => {
-		console.log(this.props.searchedText);
+		//console.log(this.props.searchedText);
+		this.props.getFilteredList(this.props.searchedText);
 	};
 
 	private processLabels = () => {
