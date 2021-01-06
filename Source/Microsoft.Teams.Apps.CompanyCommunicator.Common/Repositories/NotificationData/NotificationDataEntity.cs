@@ -171,6 +171,18 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.Notificat
         /// </summary>
         public int Throttled { get; set; }
 
+        public int Like { get; set; }
+
+        public int Heart { get; set; }
+
+        public int Surprised { get; set; }
+
+        public int Sad { get; set; }
+
+        public int Angry { get; set; }
+
+        public int Laugh { get; set; }
+
         /// <summary>
         /// Gets or sets the number or recipients who have an unknown status - this means a status
         /// that has not changed from the initial initialization status after the notification has

@@ -13,6 +13,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
     using Microsoft.Bot.Schema;
     using Microsoft.Bot.Schema.Teams;
     using Microsoft.Extensions.Localization;
+    using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.NotificationData;
+    using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.SentNotificationData;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Resources;
 
     /// <summary>
@@ -26,6 +28,9 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
         private readonly TeamsDataCapture teamsDataCapture;
         private readonly TeamsFileUpload teamsFileUpload;
         private readonly IStringLocalizer<Strings> localizer;
+        private readonly SentNotificationDataRepository sentNotificationDataRepository;
+        private readonly NotificationDataRepository NotificationDataRepository;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CompanyCommunicatorBot"/> class.
@@ -41,6 +46,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
             this.teamsDataCapture = teamsDataCapture ?? throw new ArgumentNullException(nameof(teamsDataCapture));
             this.teamsFileUpload = teamsFileUpload ?? throw new ArgumentNullException(nameof(teamsFileUpload));
             this.localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
+            this.sentNotificationDataRepository=sentNotificationDataRepository ?? throw new ArgumentNullException(nameof(sentNotificationDataRepository));
+            this.NotificationDataRepository = NotificationDataRepository ?? throw new ArgumentNullException(nameof(NotificationDataRepository));
         }
 
         /// <summary>
@@ -141,13 +148,42 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
             reply.TextFormat = "xml";
             await turnContext.SendActivityAsync(reply, cancellationToken);
         }
+        private async void UpdateReactions(string conversationId, string Type)
+        {
+         
+            var x = await this.NotificationDataRepository.GetWithFilterAsync("converstaionId eq '"+conversationId+"'");
+            var result = new List<NotificationDataEntity>(x);
+            switch(Type)
+            {
+                case "like":
+                    result[0].Like++;
+                    break;
+                case "heart":
+                    result[0].Heart++;
+                    break;
+                case "surprised":
+                    result[0].Surprised++;
+                    break;
+                case "sad":
+                    result[0].Sad++;
+                    break;
+                case "angry":
+                    result[0].Angry++;
+                    break;
+                case "laugh":
+                    result[0].Laugh++;
+                    break;
+            }
+            await this.NotificationDataRepository.CreateOrUpdateAsync(result[0]);
+        }
         protected override async Task OnReactionsAddedAsync(IList<MessageReaction> messageReactions, ITurnContext<IMessageReactionActivity> turnContext, CancellationToken cancellationToken)
         {
             foreach (var reaction in messageReactions)
             {
-                var newReaction = $"You reacted with test '{reaction.Type}' to the following message: '{turnContext.Activity.Conversation.Id}'";
+                var newReaction = $"You reacted with test '{reaction.Type}' to the following message: '{turnContext.Activity.Conversation.Id.Remove(turnContext.Activity.Conversation.Id.IndexOf(';'))}'";
                 var replyActivity = MessageFactory.Text(newReaction);
                 var resourceResponse = await turnContext.SendActivityAsync(replyActivity, cancellationToken);
+                this.UpdateReactions(turnContext.Activity.Conversation.Id.Remove(turnContext.Activity.Conversation.Id.IndexOf(';')), reaction.Type);
             }
         }
         protected override async Task OnReactionsRemovedAsync(IList<MessageReaction> messageReactions, ITurnContext<IMessageReactionActivity> turnContext, CancellationToken cancellationToken)
