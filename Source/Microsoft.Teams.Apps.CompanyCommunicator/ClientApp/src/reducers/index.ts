@@ -11,9 +11,9 @@ export const messagesListReducer = (messages = [], action: { type: string; paylo
 	if (action.type === 'FETCH_MESSAGES') {
 		return action.payload;
 	}
-	if (action.type === 'SEARCH') {
-		return action.payload;
-	}
+	// if (action.type === 'SEARCH') {
+	// 	return action.payload;
+	// }
 	return messages;
 };
 
