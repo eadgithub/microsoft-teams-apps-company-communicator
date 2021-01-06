@@ -150,7 +150,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
         }
         private async void UpdateReactions(string conversationId, string Type)
         {
-         
+            
             var x = await this.NotificationDataRepository.GetWithFilterAsync("converstaionId eq '"+conversationId+"'");
             var result = new List<NotificationDataEntity>(x);
             switch(Type)
@@ -180,7 +180,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
         {
             foreach (var reaction in messageReactions)
             {
-                var newReaction = $"You reacted with test '{reaction.Type}' to the following message: '{turnContext.Activity.Conversation.Id.Remove(turnContext.Activity.Conversation.Id.IndexOf(';'))}'";
+                
+                var newReaction = $"You reacted with test '{reaction.Type}' to the following message: '{turnContext.Activity.Conversation.Id.Remove(turnContext.Activity.Conversation.Id.IndexOf(';'))}' Type: '{turnContext.Activity.Type}'";
                 var replyActivity = MessageFactory.Text(newReaction);
                 var resourceResponse = await turnContext.SendActivityAsync(replyActivity, cancellationToken);
                 this.UpdateReactions(turnContext.Activity.Conversation.Id.Remove(turnContext.Activity.Conversation.Id.IndexOf(';')), reaction.Type);
