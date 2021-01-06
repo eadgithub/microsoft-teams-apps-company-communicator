@@ -145,7 +145,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
         {
             foreach (var reaction in messageReactions)
             {
-                var newReaction = $"You reacted with '{reaction.Type}' to the following message: '{turnContext.Activity.ReplyToId}'";
+                var newReaction = $"You reacted with test '{reaction.Type}' to the following message: '{turnContext.Activity.Conversation.Id}'";
                 var replyActivity = MessageFactory.Text(newReaction);
                 var resourceResponse = await turnContext.SendActivityAsync(replyActivity, cancellationToken);
             }
@@ -154,7 +154,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
         {
             foreach (var reaction in messageReactions)
             {
-                var newReaction = $"You removed a reaction of type '{reaction.Type}' to the following message: '{turnContext.Activity.Conversation.Id}'";
+                var newReaction = $"You removed a reaction of type '{reaction.Type}' to the following message: '{turnContext.Activity.Conversation.Id.Remove(turnContext.Activity.Conversation.Id.IndexOf(';'))}";
                 var replyActivity = MessageFactory.Text(newReaction);
                 var resourceResponse = await turnContext.SendActivityAsync(replyActivity, cancellationToken);
             }

@@ -9,7 +9,7 @@ export const getSentNotifications = async (): Promise<any> => {
 }
 
 export const getFilteredSentNotifications = async (query: string): Promise<any> => {
-    let url = baseAxiosUrl + "/sentnotifications/"+ query;
+    let url = baseAxiosUrl + "/sentnotifications/search/"+ query;
     return await axios.get(url);
 }
 
