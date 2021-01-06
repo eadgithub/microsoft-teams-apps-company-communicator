@@ -42,7 +42,8 @@ export const getFilteredList = (query: string) => async (dispatch: any) => {
 		notification.sendingStartedDate = formatDate(notification.sendingStartedDate);
 		notification.sentDate = formatDate(notification.sentDate);
 	});
-	dispatch({ type: 'FETCH_FILTEREDMESSAGES', payload: response.data });
+	console.log("Filtered:", notificationList);
+	dispatch({ type: 'FETCH_FILTEREDMESSAGES', payload: notificationList });
 };
 
 export const getDraftMessagesList = () => async (dispatch: any) => {
