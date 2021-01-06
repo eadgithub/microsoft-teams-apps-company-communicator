@@ -66,9 +66,9 @@ class TabContainer extends React.Component<ITaskInfoProps, ITabContainerState> {
 	public async searchTextChanged(e, newProp) {
 		var searchttxt = new String(newProp.value);
 		if (searchttxt.length >= 3) {
-			console.log("inside textchanged", newProp.value);
-			this.props.getFilteredList(newProp.value);
+			console.log('inside textchanged', newProp.value);
 			this.props.searchBarChanged(newProp);
+			this.props.getFilteredList(newProp.value);
 		}
 	}
 
@@ -91,13 +91,13 @@ class TabContainer extends React.Component<ITaskInfoProps, ITabContainerState> {
 					key: 'draft',
 					content: (
 						<div>
+							<Input
+								placeholder="Search"
+								icon="search"
+								className="searchBox"
+								onChange={this.searchTextChanged.bind(this)}
+							/>
 							<div className="messages">
-								<Input
-									placeholder="Search"
-									icon="search"
-									className="searchBox"
-									onChange={this.searchTextChanged.bind(this)}
-								/>
 								<Messages />
 							</div>
 						</div>

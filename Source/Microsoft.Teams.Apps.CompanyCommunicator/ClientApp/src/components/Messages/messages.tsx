@@ -128,16 +128,15 @@ class Messages extends React.Component<IMessageProps, IMessageState> {
 		} else if (this.state.message.length === 0) {
 			return <div className="results">{this.localize('EmptySentMessages')}</div>;
 		} else if (this.props.searchedText != null && searchedValue.length >= 3) {
-			console.log('SearchedValue Length ', searchedValue);
+			console.log('SearchedValue ', searchedValue);
 			return <List selectable items={allFilteredMessages} className="list" />;
 		} else {
-			return <div> <Input placeholder="Search" icon="search" /> <List selectable items={allMessages} className="list" /></div>;
+			return <List selectable items={allMessages} className="list" />;
 		}
 	}
 
 	private getFilteredList = () => {
 		//console.log(this.props.searchedText);
-		
 	};
 
 	private processLabels = () => {
