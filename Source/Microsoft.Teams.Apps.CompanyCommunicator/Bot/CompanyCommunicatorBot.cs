@@ -41,13 +41,13 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
         public CompanyCommunicatorBot(
             TeamsDataCapture teamsDataCapture,
             TeamsFileUpload teamsFileUpload,
-            IStringLocalizer<Strings> localizer)
+            IStringLocalizer<Strings> localizer, SentNotificationDataRepository sentNotificationDataRepository, NotificationDataRepository NotificationDataRepository)
         {
             this.teamsDataCapture = teamsDataCapture ?? throw new ArgumentNullException(nameof(teamsDataCapture));
             this.teamsFileUpload = teamsFileUpload ?? throw new ArgumentNullException(nameof(teamsFileUpload));
             this.localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
-            //this.sentNotificationDataRepository=sentNotificationDataRepository ?? throw new ArgumentNullException(nameof(sentNotificationDataRepository));
-            //this.NotificationDataRepository = NotificationDataRepository ?? throw new ArgumentNullException(nameof(NotificationDataRepository));
+            this.sentNotificationDataRepository=sentNotificationDataRepository ?? throw new ArgumentNullException(nameof(sentNotificationDataRepository));
+            this.NotificationDataRepository = NotificationDataRepository ?? throw new ArgumentNullException(nameof(NotificationDataRepository));
         }
 
         /// <summary>
@@ -150,33 +150,32 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
         }
         private async void UpdateReactions(string conversationId, string Type)
         {
-            
-            var x = await this.NotificationDataRepository.GetWithFilterAsync("converstaionId eq '"+conversationId+"'");
-            var result = new List<NotificationDataEntity>(x);
-            switch(Type)
+            var rowkey = await this.sentNotificationDataRepository.GetAsync(null, conversationId);
+            var x = await this.NotificationDataRepository.GetAsync(null, rowkey.RowKey);
+            switch (Type)
             {
                 case "like":
-                    result[0].Like++;
+                   x.Like++;
                     break;
                 case "heart":
-                    result[0].Heart++;
+                   x.Heart++;
                     break;
                 case "surprised":
-                    result[0].Surprised++;
+                   x.Surprised++;
                     break;
                 case "sad":
-                    result[0].Sad++;
+                   x.Sad++;
                     break;
                 case "angry":
-                    result[0].Angry++;
+                   x.Angry++;
                     break;
                 case "laugh":
-                    result[0].Laugh++;
+                   x.Laugh++;
                     break;
             }
-            await this.NotificationDataRepository.CreateOrUpdateAsync(result[0]);
+            await this.NotificationDataRepository.CreateOrUpdateAsync(x);
         }
-        protected override async Task OnReactionsAddedAsync(IList<MessageReaction> messageReactions, ITurnContext<IMessageReactionActivity> turnContext, CancellationToken cancellationToken)
+    protected override async Task OnReactionsAddedAsync(IList<MessageReaction> messageReactions, ITurnContext<IMessageReactionActivity> turnContext, CancellationToken cancellationToken)
         {
             foreach (var reaction in messageReactions)
             {
@@ -188,7 +187,6 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
                 var replyActivity = MessageFactory.Text(newReaction);
                
                 var resourceResponse = await turnContext.SendActivityAsync(replyActivity, cancellationToken);
-                this.UpdateReactions(turnContext.Activity.Conversation.Id.Remove(turnContext.Activity.Conversation.Id.IndexOf(';')), reaction.Type);
             }
         }
         protected override async Task OnReactionsRemovedAsync(IList<MessageReaction> messageReactions, ITurnContext<IMessageReactionActivity> turnContext, CancellationToken cancellationToken)
