@@ -46,8 +46,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
             this.teamsDataCapture = teamsDataCapture ?? throw new ArgumentNullException(nameof(teamsDataCapture));
             this.teamsFileUpload = teamsFileUpload ?? throw new ArgumentNullException(nameof(teamsFileUpload));
             this.localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
-            this.sentNotificationDataRepository=sentNotificationDataRepository ?? throw new ArgumentNullException(nameof(sentNotificationDataRepository));
-            this.NotificationDataRepository = NotificationDataRepository ?? throw new ArgumentNullException(nameof(NotificationDataRepository));
+            //this.sentNotificationDataRepository=sentNotificationDataRepository ?? throw new ArgumentNullException(nameof(sentNotificationDataRepository));
+            //this.NotificationDataRepository = NotificationDataRepository ?? throw new ArgumentNullException(nameof(NotificationDataRepository));
         }
 
         /// <summary>
@@ -181,8 +181,9 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
             foreach (var reaction in messageReactions)
             {
                 
-                var newReaction = $"You reacted with test '{reaction.Type}' to the following message: '{turnContext.Activity.Conversation.Id.Remove(turnContext.Activity.Conversation.Id.IndexOf(';'))}' Type: '{turnContext.Activity.Type}'";
+                var newReaction = $"You reacted with test '{reaction.Type}' to the following message: '{turnContext.Activity.Conversation.Id.Remove(turnContext.Activity.Conversation.Id.IndexOf(';'))}' Type: '{turnContext.Activity.From}'";
                 var replyActivity = MessageFactory.Text(newReaction);
+               
                 var resourceResponse = await turnContext.SendActivityAsync(replyActivity, cancellationToken);
                 this.UpdateReactions(turnContext.Activity.Conversation.Id.Remove(turnContext.Activity.Conversation.Id.IndexOf(';')), reaction.Type);
             }
