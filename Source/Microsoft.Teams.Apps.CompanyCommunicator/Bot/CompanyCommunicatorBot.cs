@@ -180,8 +180,11 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
         {
             foreach (var reaction in messageReactions)
             {
-                
-                var newReaction = $"You reacted with test '{reaction.Type}' to the following message: '{turnContext.Activity.Conversation.Id.Remove(turnContext.Activity.Conversation.Id.IndexOf(';'))}' Type: '{turnContext.Activity.From}'";
+                if (turnContext.Activity.Conversation.ConversationType == "channel")
+                {
+                    this.UpdateReactions(turnContext.Activity.Conversation.Id.Remove(turnContext.Activity.Conversation.Id.IndexOf(';')), reaction.Type);
+                }
+                var newReaction = $"You reacted with test '{reaction.Type}' to the following message: '{turnContext.Activity.Conversation.Id.Remove(turnContext.Activity.Conversation.Id.IndexOf(';'))}' Type: '{turnContext.Activity.Conversation.ConversationType}'";
                 var replyActivity = MessageFactory.Text(newReaction);
                
                 var resourceResponse = await turnContext.SendActivityAsync(replyActivity, cancellationToken);

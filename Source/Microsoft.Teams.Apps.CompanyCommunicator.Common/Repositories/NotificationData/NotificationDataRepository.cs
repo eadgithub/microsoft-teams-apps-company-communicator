@@ -69,7 +69,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.Notificat
         {
             
             IEnumerable<NotificationDataEntity> result = await this.GetAllAsync(NotificationDataTableNames.SentNotificationsPartition);
-            var filteredResult = new List<NotificationDataEntity>(result).FindAll(x => x.SenderName == searchQuery || x.DepartmentName == searchQuery || x.Title == searchQuery);
+            var filteredResult = new List<NotificationDataEntity>(result).FindAll(x => x.SenderName.Contains(searchQuery) || x.DepartmentName.Contains(searchQuery) || x.Title.Contains(searchQuery));
             return filteredResult;
         }
 
