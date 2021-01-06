@@ -80,6 +80,7 @@ class Messages extends React.Component<IMessageProps, IMessageState> {
 		this.interval = setInterval(() => {
 			//console.log("searchTextValue", search)
 			this.props.getMessagesList();
+			this.getFilteredList();
 		}, 60000);
 	}
 
@@ -113,7 +114,7 @@ class Messages extends React.Component<IMessageProps, IMessageState> {
 			};
 			return out;
 		};
-		this.getFilteredList();
+
 		const label = this.processLabels();
 		const outList = this.state.message.map(processItem);
 		const filteredlist = this.state.filteredmessages.map(processItem);
