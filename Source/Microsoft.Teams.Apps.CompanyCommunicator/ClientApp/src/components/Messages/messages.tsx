@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { withTranslation, WithTranslation } from 'react-i18next';
 import { TooltipHost } from 'office-ui-fabric-react';
 import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
-import { Icon, Loader, List, Flex, Text } from '@stardust-ui/react';
+import { Icon, Loader, List, Flex, Text, Input } from '@stardust-ui/react';
 import * as microsoftTeams from '@microsoft/teams-js';
 import { selectMessage, getMessagesList, getDraftMessagesList, getFilteredList, searchBarChanged } from '../../actions';
 import { getBaseUrl } from '../../configVariables';
@@ -131,7 +131,7 @@ class Messages extends React.Component<IMessageProps, IMessageState> {
 			console.log('SearchedValue Length ', searchedValue);
 			return <List selectable items={allFilteredMessages} className="list" />;
 		} else {
-			return <List selectable items={allMessages} className="list" />;
+			return <div> <Input placeholder="Search" icon="search" /> <List selectable items={allMessages} className="list" /></div>;
 		}
 	}
 

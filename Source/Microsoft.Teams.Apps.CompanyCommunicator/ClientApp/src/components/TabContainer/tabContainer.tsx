@@ -66,6 +66,7 @@ class TabContainer extends React.Component<ITaskInfoProps, ITabContainerState> {
 	public async searchTextChanged(e, newProp) {
 		var searchttxt = new String(newProp.value);
 		if (searchttxt.length >= 3) {
+			console.log("inside textchanged", newProp.value);
 			this.props.getFilteredList(newProp.value);
 			this.props.searchBarChanged(newProp);
 		}
