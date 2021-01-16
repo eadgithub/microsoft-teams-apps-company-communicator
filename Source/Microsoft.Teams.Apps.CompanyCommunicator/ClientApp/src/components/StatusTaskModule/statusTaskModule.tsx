@@ -25,7 +25,7 @@ export interface IMessage {
     id: string;
     title: string;
     acknowledgements?: string;
-    reactions?: string;
+    reactions?: number;
     responses?: string;
     succeeded?: string;
     failed?: string;
@@ -115,6 +115,7 @@ class StatusTaskModule extends React.Component<StatusTaskModuleProps, IStatusSta
             response.data.sendingStartedDate = formatDate(response.data.sendingStartedDate);
             response.data.sentDate = formatDate(response.data.sentDate);
             response.data.succeeded = formatNumber(response.data.succeeded);
+            response.data.reactions = formatNumber(response.data.reactions);
             response.data.failed = formatNumber(response.data.failed);
             response.data.unknown = response.data.unknown && formatNumber(response.data.unknown);
             this.setState({
@@ -161,6 +162,7 @@ class StatusTaskModule extends React.Component<StatusTaskModuleProps, IStatusSta
                                     <br />
                                     <label>{this.localize("Failure", { "FailureCount": this.state.message.failed })}</label>
                                     <br />
+                                    <label>{this.localize("Reactions", { "Reactions": this.state.message.reactions })}</label>
                                     {this.state.message.unknown &&
                                         <>
                                         <label>{this.localize("Unknown", { "UnknownCount": this.state.message.unknown })}</label>

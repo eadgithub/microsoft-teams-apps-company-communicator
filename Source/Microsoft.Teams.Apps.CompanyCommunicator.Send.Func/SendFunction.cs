@@ -42,7 +42,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func
         private readonly IMessageService messageService;
         private readonly SendQueue sendQueue;
         private readonly IStringLocalizer<Strings> localizer;
-
+        private string replytoId;
         /// <summary>
         /// Initializes a new instance of the <see cref="SendFunction"/> class.
         /// </summary>
@@ -121,7 +121,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func
                         totalNumberOfSendThrottles: 0,
                         statusCode: SentNotificationDataEntity.FinalFaultedStatusCode,
                         allSendStatusCodes: $"{SentNotificationDataEntity.FinalFaultedStatusCode},",
-                        errorMessage: this.localizer.GetString("AppNotInstalled"));
+                        errorMessage: this.localizer.GetString("AppNotInstalled"),
+                        replytoId:"woops");
                     return;
                 }
 
@@ -142,7 +143,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func
                     conversationId: messageContent.GetConversationId(),
                     maxAttempts: this.maxNumberOfAttempts,
                     logger: log);
-
+                replytoId = response.ReplytoId;
                 // Process response.
                 await this.ProcessResponseAsync(messageContent, response, log);
             }
@@ -171,7 +172,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func
                     totalNumberOfSendThrottles: 0,
                     statusCode: statusCode,
                     allSendStatusCodes: $"{statusCode},",
-                    errorMessage: errorMessage);
+                    errorMessage: errorMessage,
+                    replytoId: this.replytoId);
 
                 throw;
             }
@@ -207,7 +209,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func
                     totalNumberOfSendThrottles: sendMessageResponse.TotalNumberOfSendThrottles,
                     statusCode: sendMessageResponse.StatusCode,
                     allSendStatusCodes: sendMessageResponse.AllSendStatusCodes,
-                    errorMessage: sendMessageResponse.ErrorMessage);
+                    errorMessage: sendMessageResponse.ErrorMessage, replytoId:sendMessageResponse.ReplytoId);
 
             // Throttled
             if (sendMessageResponse.ResultType == SendMessageResult.Throttled)

@@ -132,6 +132,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Prep.Func.Export.Streams
                     Upn = user == null ? this.localizer.GetString("AdminConsentError") : user.UserPrincipalName,
                     DeliveryStatus = this.localizer.GetString(sentNotification.DeliveryStatus),
                     StatusReason = this.GetStatusReason(sentNotification.ErrorMessage, sentNotification.StatusCode.ToString()),
+                    Reaction = sentNotification.Reaction,
                 };
                 userdatalist.Add(userData);
             }

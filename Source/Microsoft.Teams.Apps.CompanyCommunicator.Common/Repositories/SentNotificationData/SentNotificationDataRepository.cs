@@ -4,6 +4,7 @@
 
 namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.SentNotificationData
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
     using Microsoft.Extensions.Options;
@@ -44,6 +45,10 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.SentNotif
             {
                 await this.Table.CreateAsync();
             }
+        }
+        public async Task<IEnumerable<SentNotificationDataEntity>> GetSentNotificationDataByMessageIdAsync(string messageId)
+        {
+            return await this.GetmessageIdFilter(messageId);
         }
     }
 }

@@ -92,7 +92,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func.Services
             int totalNumberOfSendThrottles,
             int statusCode,
             string allSendStatusCodes,
-            string errorMessage)
+            string errorMessage, string replytoId)
         {
             // Current time as sent date time.
             var sentDateTime = DateTime.UtcNow;
@@ -109,10 +109,10 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func.Services
             notification.ErrorMessage = errorMessage;
             notification.NumberOfFunctionAttemptsToSend = notification.NumberOfFunctionAttemptsToSend + 1;
             notification.AllSendStatusCodes = $"{notification.AllSendStatusCodes ?? string.Empty}{allSendStatusCodes}";
-
+            notification.replytoId = replytoId;
             if (statusCode == (int)HttpStatusCode.Created)
             {
-                notification.DeliveryStatus = SentNotificationDataEntity.Succeeded;
+                 notification.DeliveryStatus = SentNotificationDataEntity.Succeeded;
             }
             else if (statusCode == (int)HttpStatusCode.TooManyRequests)
             {

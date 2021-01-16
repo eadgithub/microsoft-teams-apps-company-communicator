@@ -100,6 +100,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.Teams
                         response.ResultType = SendMessageResult.Succeeded;
                         response.StatusCode = (int)HttpStatusCode.Created;
                         response.AllSendStatusCodes += $"{(int)HttpStatusCode.Created},";
+                        response.ReplytoId = message.Id;
                     }
                     catch (ErrorResponseException e)
                     {

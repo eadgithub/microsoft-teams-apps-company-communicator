@@ -183,5 +183,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.SentNotif
         /// only the final one will be stored here.
         /// </summary>
         public string ErrorMessage { get; set; }
+        public string replytoId { get; set; }
+        public string Reaction { get; set; }
     }
 }

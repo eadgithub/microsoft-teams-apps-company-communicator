@@ -11,6 +11,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories
     using System.Threading.Tasks;
     using Microsoft.Azure.Cosmos.Table;
     using Microsoft.Extensions.Logging;
+    using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.SentNotificationData;
 
     /// <summary>
     /// Base repository for the data stored in the Azure Table Storage.
@@ -160,6 +161,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories
                 var combinedFilter = this.CombineFilters(filter, partitionKeyFilter);
                 var query = new TableQuery<T>().Where(combinedFilter);
                 var entities = await this.ExecuteQueryAsync(query);
+                Logger.LogError(query.FilterString);
                 return entities;
             }
             catch (Exception ex)
@@ -324,6 +326,64 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories
                 }
 
                 return rowKeysFilter;
+            }
+            catch (Exception ex)
+            {
+                this.Logger.LogError(ex, ex.Message);
+                throw;
+            }
+        }
+        /// <summary>
+        /// Get a filter that filters in the entities matching the incoming row keys.
+        /// </summary>
+        /// <param name="rowKey">Row keys.</param>
+        /// <returns>A filter that filters in the entities matching the incoming row keys.</returns>
+        protected string GetRowKeyFilter(string rowKey)
+        {
+            try
+            {
+                var rowKeysFilter = string.Empty;
+                var singleRowKeyFilter = TableQuery.GenerateFilterCondition(
+                        nameof(TableEntity.RowKey),
+                        QueryComparisons.Equal,
+                        rowKey);
+                    if (string.IsNullOrWhiteSpace(rowKeysFilter))
+                    {
+                        rowKeysFilter = singleRowKeyFilter;
+                    }
+                    else
+                    {
+                        rowKeysFilter = TableQuery.CombineFilters(rowKeysFilter, TableOperators.Or, singleRowKeyFilter);
+                    }
+                return rowKeysFilter;
+            }
+            catch (Exception ex)
+            {
+                this.Logger.LogError(ex, ex.Message);
+                throw;
+            }
+        }
+        protected async Task<IEnumerable<T>> GetmessageIdFilter(string rowKey)
+        {
+            try
+            {
+                var rowKeysFilter = string.Empty;
+                var singleRowKeyFilter = TableQuery.GenerateFilterCondition(
+                        "replytoId",
+                        QueryComparisons.Equal,
+                        rowKey);
+                if (string.IsNullOrWhiteSpace(rowKeysFilter))
+                {
+                    rowKeysFilter = singleRowKeyFilter;
+                }
+                else
+                {
+                    rowKeysFilter = TableQuery.CombineFilters(rowKeysFilter, TableOperators.Or, singleRowKeyFilter);
+                }
+                Logger.LogError(rowKeysFilter);
+                var query = new TableQuery<T>().Where(rowKeysFilter);
+                var entities = await this.ExecuteQueryAsync(query);
+                return entities;
             }
             catch (Exception ex)
             {

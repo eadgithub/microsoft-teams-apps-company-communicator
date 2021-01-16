@@ -167,6 +167,12 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
                     Status = notificationEntity.GetStatus(),
                     SenderName = notificationEntity.SenderName,
                     DepartmentName = notificationEntity.DepartmentName,
+                    Like=notificationEntity.Like,
+                    Heart=notificationEntity.Heart,
+                    Surprised=notificationEntity.Surprised,
+                    Laugh=notificationEntity.Laugh,
+                    Angry=notificationEntity.Angry,
+                    Sad=notificationEntity.Sad,
                 };
 
                 result.Add(summary);
@@ -195,6 +201,12 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
                     Status = notificationEntity.GetStatus(),
                     SenderName = notificationEntity.SenderName,
                     DepartmentName = notificationEntity.DepartmentName,
+                    Like = notificationEntity.Like,
+                    Heart = notificationEntity.Heart,
+                    Surprised = notificationEntity.Surprised,
+                    Laugh = notificationEntity.Laugh,
+                    Angry = notificationEntity.Angry,
+                    Sad = notificationEntity.Sad,
                 };
 
                 result.Add(summary);

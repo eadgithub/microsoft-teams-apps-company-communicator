@@ -51,6 +51,6 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Send.Func.Services
             int totalNumberOfSendThrottles,
             int statusCode,
             string allSendStatusCodes,
-            string errorMessage);
+            string errorMessage, string replytoId);
     }
 }

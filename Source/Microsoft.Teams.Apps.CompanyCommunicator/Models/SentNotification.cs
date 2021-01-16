@@ -78,6 +78,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Models
         public bool SendingCompleted { get; set; }
 
         public string CreatedBy { get; set; }
+        
        
     }
 }

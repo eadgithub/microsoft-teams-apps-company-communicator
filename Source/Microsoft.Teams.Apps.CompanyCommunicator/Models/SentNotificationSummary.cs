@@ -69,5 +69,18 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Models
 
         public string DepartmentName { get; set; }
         /// </summary>
+        
+
+        public int Like { get; set; }
+
+        public int Heart { get; set; }
+
+        public int Surprised { get; set; }
+
+        public int Sad { get; set; }
+
+        public int Angry { get; set; }
+
+        public int Laugh { get; set; }
     }
 }

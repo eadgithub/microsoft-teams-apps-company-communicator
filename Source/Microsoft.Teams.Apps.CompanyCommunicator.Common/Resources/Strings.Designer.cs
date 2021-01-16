@@ -115,6 +115,15 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reaction.
+        /// </summary>
+        public static string ColumnName_Reaction {
+            get {
+                return ResourceManager.GetString("ColumnName_Reaction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sent TimeStamp.
         /// </summary>
         public static string ColumnName_SentTimeStamp {

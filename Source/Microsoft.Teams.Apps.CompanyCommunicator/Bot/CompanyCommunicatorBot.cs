@@ -13,6 +13,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
     using Microsoft.Bot.Schema;
     using Microsoft.Bot.Schema.Teams;
     using Microsoft.Extensions.Localization;
+    using Microsoft.Extensions.Logging;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.NotificationData;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.SentNotificationData;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Resources;
@@ -30,6 +31,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
         private readonly IStringLocalizer<Strings> localizer;
         private readonly SentNotificationDataRepository sentNotificationDataRepository;
         private readonly NotificationDataRepository NotificationDataRepository;
+        
 
 
         /// <summary>
@@ -48,6 +50,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
             this.localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
             this.sentNotificationDataRepository=sentNotificationDataRepository ?? throw new ArgumentNullException(nameof(sentNotificationDataRepository));
             this.NotificationDataRepository = NotificationDataRepository ?? throw new ArgumentNullException(nameof(NotificationDataRepository));
+            
         }
 
         /// <summary>
@@ -148,42 +151,74 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
             reply.TextFormat = "xml";
             await turnContext.SendActivityAsync(reply, cancellationToken);
         }
-        private async void UpdateReactions(string conversationId, string Type)
+        private async void UpdateReactions(string conversationId, string Type, bool add)
         {
-            var rowkey = await this.sentNotificationDataRepository.GetAsync(null, conversationId);
-            var x = await this.NotificationDataRepository.GetAsync(null, rowkey.RowKey);
-            switch (Type)
+            var result = await this.sentNotificationDataRepository.GetSentNotificationDataByMessageIdAsync(conversationId);
+            var resultList = new List<SentNotificationDataEntity>(result);
+            var x = await this.NotificationDataRepository.GetAsync("SentNotifications", resultList[0].PartitionKey);
+            if (add)
             {
-                case "like":
-                   x.Like++;
-                    break;
-                case "heart":
-                   x.Heart++;
-                    break;
-                case "surprised":
-                   x.Surprised++;
-                    break;
-                case "sad":
-                   x.Sad++;
-                    break;
-                case "angry":
-                   x.Angry++;
-                    break;
-                case "laugh":
-                   x.Laugh++;
-                    break;
+                resultList[0].Reaction = Type;
+                await this.sentNotificationDataRepository.CreateOrUpdateAsync(resultList[0]);
+                switch (Type)
+                {
+                    case "like":
+                        x.Like++;
+                        break;
+                    case "heart":
+                        x.Heart++;
+                        break;
+                    case "surprised":
+                        x.Surprised++;
+                        break;
+                    case "sad":
+                        x.Sad++;
+                        break;
+                    case "angry":
+                        x.Angry++;
+                        break;
+                    case "laugh":
+                        x.Laugh++;
+                        break;
+                }
+            }
+            else
+            {
+                resultList[0].Reaction = "None";
+                await this.sentNotificationDataRepository.CreateOrUpdateAsync(resultList[0]);
+                switch (Type)
+                {
+                    case "like":
+                        x.Like--;
+                        break;
+                    case "heart":
+                        x.Heart--;
+                        break;
+                    case "surprised":
+                        x.Surprised--;
+                        break;
+                    case "sad":
+                        x.Sad--;
+                        break;
+                    case "angry":
+                        x.Angry--;
+                        break;
+                    case "laugh":
+                        x.Laugh--;
+                        break;
+                }  
             }
             await this.NotificationDataRepository.CreateOrUpdateAsync(x);
         }
-    protected override async Task OnReactionsAddedAsync(IList<MessageReaction> messageReactions, ITurnContext<IMessageReactionActivity> turnContext, CancellationToken cancellationToken)
+            
+        
+        protected override async Task OnReactionsAddedAsync(IList<MessageReaction> messageReactions, ITurnContext<IMessageReactionActivity> turnContext, CancellationToken cancellationToken)
         {
             foreach (var reaction in messageReactions)
             {
-                if (turnContext.Activity.Conversation.ConversationType == "channel")
-                {
-                    this.UpdateReactions(turnContext.Activity.Conversation.Id.Remove(turnContext.Activity.Conversation.Id.IndexOf(';')), reaction.Type);
-                }
-                var newReaction = $"You reacted with test '{reaction.Type}' to the following message: '{turnContext.Activity.Conversation.Id.Remove(turnContext.Activity.Conversation.Id.IndexOf(';'))}' Type: '{turnContext.Activity.Conversation.ConversationType}'";
+
+                this.UpdateReactions(turnContext.Activity.ReplyToId, reaction.Type, true);
+                var newReaction = $"You reacted with test '{reaction.Type}' MessageID: '{turnContext.Activity.ReplyToId}' Type:'{turnContext.Activity.Conversation.ConversationType}'";
                 var replyActivity = MessageFactory.Text(newReaction);
                
                 var resourceResponse = await turnContext.SendActivityAsync(replyActivity, cancellationToken);
@@ -193,7 +228,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
         {
             foreach (var reaction in messageReactions)
             {
-                var newReaction = $"You removed a reaction of type '{reaction.Type}' to the following message: '{turnContext.Activity.Conversation.Id.Remove(turnContext.Activity.Conversation.Id.IndexOf(';'))}";
+                this.UpdateReactions(turnContext.Activity.ReplyToId, reaction.Type, false);
+                var newReaction = $"You removed a reaction of type '{reaction.Type}' MessageID: '{turnContext.Activity.ReplyToId}'";
                 var replyActivity = MessageFactory.Text(newReaction);
                 var resourceResponse = await turnContext.SendActivityAsync(replyActivity, cancellationToken);
             }

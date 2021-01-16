@@ -31,6 +31,12 @@ export interface IMessage {
 	responses?: string;
 	departmentName: string;
 	senderName: string;
+	like: number;
+	heart: number;
+	surprised: number;
+	laugh: number;
+	angry: number;
+	sad: number;
 }
 
 export interface IMessageProps extends WithTranslation {
@@ -129,9 +135,9 @@ class Messages extends React.Component<IMessageProps, IMessageState> {
 			return <div className="results">{this.localize('EmptySentMessages')}</div>;
 		} else if (this.props.searchedText != null && searchedValue.length >= 3) {
 			console.log('SearchedValue ', searchedValue);
-			return <List selectable items={allFilteredMessages} className="list" />;
+			return <div> <br/> <List selectable items={allFilteredMessages} className="list" /></div>;
 		} else {
-			return <List selectable items={allMessages} className="list" />;
+			return <div> <br /> <List selectable items={allMessages} className="list" /></div>;
 		}
 	}
 
@@ -145,22 +151,25 @@ class Messages extends React.Component<IMessageProps, IMessageState> {
 				key: 'labels',
 				content: (
 					<Flex vAlign="center" fill gap="gap.small">
-						<Flex.Item size="size.quarter" variables={{ 'size.quarter': '16%' }} grow={1}>
+						<Flex.Item size="size.quarter" variables={{ 'size.quarter': '14%' }} grow={1}>
 							<Text truncated weight="bold" content={this.localize('TitleText')} />
 						</Flex.Item>
-						<Flex.Item size="size.quarter" variables={{ 'size.quarter': '16%' }} shrink={false}>
+						<Flex.Item size="size.quarter" variables={{ 'size.quarter': '14%' }} shrink={false}>
 							<Text truncated content={this.localize('SenderName')} weight="bold" />
 						</Flex.Item>
-						<Flex.Item size="size.quarter" variables={{ 'size.quarter': '16%' }} shrink={false}>
+						<Flex.Item size="size.quarter" variables={{ 'size.quarter': '14%' }} shrink={false}>
 							<Text truncated content={this.localize('DepartmentName')} weight="bold" />
 						</Flex.Item>
-						<Flex.Item size="size.quarter" variables={{ 'size.quarter': '16%' }}>
+						<Flex.Item size="size.quarter" variables={{ 'size.quarter': '14%' }}>
 							<Text />
 						</Flex.Item>
-						<Flex.Item size="size.quarter" variables={{ 'size.quarter': '16%' }} shrink={false}>
+						<Flex.Item size="size.quarter" variables={{ 'size.quarter': '14%' }} shrink={false}>
 							<Text truncated content={this.localize('Recipients')} weight="bold" />
 						</Flex.Item>
-						<Flex.Item size="size.quarter" variables={{ 'size.quarter': '16%' }}>
+						<Flex.Item size="size.quarter" variables={{ 'size.quarter': '14%' }} shrink={false}>
+							<Text truncated content={this.localize('Reactions')} weight="bold" />
+						</Flex.Item>
+						<Flex.Item size="size.quarter" variables={{ 'size.quarter': '14%' }}>
 							<Text truncated content={this.localize('Sent')} weight="bold" />
 						</Flex.Item>
 						<Flex.Item shrink={0}>
@@ -206,27 +215,25 @@ class Messages extends React.Component<IMessageProps, IMessageState> {
 	};
 
 	private messageContent = (message: any) => {
-		console.log('Debug: ', message);
-		console.log('SenderName: ', message.SenderName);
-		console.log('DepartmentName: ', message.DepartmentName);
+		
 
 		return (
 			<Flex className="listContainer" vAlign="center" fill gap="gap.small">
-				<Flex.Item size="size.quarter" variables={{ 'size.quarter': '16%' }} grow={1}>
+				<Flex.Item size="size.quarter" variables={{ 'size.quarter': '14%' }} grow={1}>
 					<Text truncated content={message.title} />
 				</Flex.Item>
-				<Flex.Item size="size.quarter" variables={{ 'size.quarter': '16%' }} grow={1}>
+				<Flex.Item size="size.quarter" variables={{ 'size.quarter': '14%' }} grow={1}>
 					<Text truncated content={message.senderName} />
 				</Flex.Item>
 
-				<Flex.Item size="size.quarter" variables={{ 'size.quarter': '16%' }} grow={1}>
+				<Flex.Item size="size.quarter" variables={{ 'size.quarter': '14%' }}>
 					<Text truncated content={message.departmentName} />
 				</Flex.Item>
 
-				<Flex.Item size="size.quarter" variables={{ 'size.quarter': '16%' }}>
+				<Flex.Item size="size.quarter" variables={{ 'size.quarter': '14%' }}>
 					{this.renderSendingText(message)}
 				</Flex.Item>
-				<Flex.Item size="size.quarter" variables={{ 'size.quarter': '16%' }} shrink={false}>
+				<Flex.Item size="size.quarter" variables={{ 'size.quarter': '10%' }} grow={1} >
 					<div>
 						<TooltipHost content={this.props.t('TooltipSuccess')} calloutProps={{ gapSpace: 0 }}>
 							<Icon name="stardust-checkmark" xSpacing="after" className="succeeded" outline />
@@ -244,7 +251,36 @@ class Messages extends React.Component<IMessageProps, IMessageState> {
 						)}
 					</div>
 				</Flex.Item>
-				<Flex.Item size="size.quarter" variables={{ 'size.quarter': '16%' }}>
+				<Flex.Item size="size.quarter" variables={{ 'size.quarter': '18%' }} shrink={false} grow={1}>
+					<div>
+						<TooltipHost content={this.props.t('TooltipLike')} calloutProps={{ gapSpace: 0 }}>
+							<img src="https://statics.teams.cdn.office.net/evergreen-assets/skype/v2/yes/20.png?v=4" className="reaction" />
+							<span className="semiBold">{formatNumber(message.like)}</span>
+						</TooltipHost>
+						<TooltipHost content={this.props.t('TooltipHeart')} calloutProps={{ gapSpace: 0 }}>
+							<img src="https://statics.teams.cdn.office.net/evergreen-assets/skype/v2/heart/20.png?v=4" className="reaction" />
+							<span className="semiBold">{formatNumber(message.heart)}</span>
+						</TooltipHost>
+						<TooltipHost content={this.props.t('TooltipLaugh')} calloutProps={{ gapSpace: 0 }}>
+							<img src="https://statics.teams.cdn.office.net/evergreen-assets/skype/v2/laugh/20.png?v=4" className="reaction" />
+							<span className="semiBold">{formatNumber(message.laugh)}</span>
+						</TooltipHost>
+						<TooltipHost content={this.props.t('TooltipSurprised')} calloutProps={{ gapSpace: 0 }}>
+							<img src="https://statics.teams.cdn.office.net/evergreen-assets/skype/v2/surprised/20.png?v=4" className="reaction" />
+							<span className="semiBold">{formatNumber(message.surprised)}</span>
+						</TooltipHost>
+						<TooltipHost content={this.props.t('TooltipSad')} calloutProps={{ gapSpace: 0 }}>
+							<img src="https://statics.teams.cdn.office.net/evergreen-assets/skype/v2/sad/20.png?v=4" className="reaction" />
+							<span className="semiBold">{formatNumber(message.sad)}</span>
+						</TooltipHost>
+						<TooltipHost content={this.props.t('TooltipAngry')} calloutProps={{ gapSpace: 0 }}>
+							<img src="https://statics.teams.cdn.office.net/evergreen-assets/skype/v2/angry/20.png?v=4" className="reaction" />
+							<span className="semiBold">{formatNumber(message.angry)}</span>
+						</TooltipHost>
+						
+					</div>
+				</Flex.Item>
+				<Flex.Item size="size.quarter" variables={{ 'size.quarter': '14%' }}>
 					<Text truncated className="semiBold" content={message.sentDate} />
 				</Flex.Item>
 				<Flex.Item shrink={0}>

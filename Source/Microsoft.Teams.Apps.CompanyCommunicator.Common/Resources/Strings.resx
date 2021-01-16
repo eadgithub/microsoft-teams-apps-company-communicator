@@ -141,6 +141,9 @@
   <data name="ColumnName_StatusReason" xml:space="preserve">
     <value>Status Reason</value>
   </data>
+  <data name="ColumnName_Reaction" xml:space="preserve">
+    <value>Reaction</value>
+  </data>
   <data name="ColumnName_TeamId" xml:space="preserve">
     <value>Team ID</value>
   </data>
