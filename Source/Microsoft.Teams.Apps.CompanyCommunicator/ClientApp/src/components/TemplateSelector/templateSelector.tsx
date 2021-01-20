@@ -61,9 +61,9 @@ export class templateSelector extends React.Component<Props, State, ITaskInfo> {
 		let renderedCard = adaptiveCard.render();
 		const container = document.getElementsByClassName('adaptiveCardContainer')[0].firstChild;
 		if (container != null) {
-			container.replaceWith(renderedCard);
+			container.replaceWith(renderedCard!);
 		} else {
-			document.getElementsByClassName('adaptiveCardContainer')[0].appendChild(renderedCard);
+			document.getElementsByClassName('adaptiveCardContainer')[0].appendChild(renderedCard!);
 		}
 	}
 

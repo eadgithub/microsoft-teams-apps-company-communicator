@@ -6,22 +6,16 @@ import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
 import * as AdaptiveCards from "adaptivecards";
 import { Button, List, Loader, Dropdown, Text, Label, Header } from '@stardust-ui/react';
 import * as microsoftTeams from "@microsoft/teams-js";
+import { AddIcon, BroadcastIcon } from '@fluentui/react-icons-northstar'
 
 import './newMessage.scss';
 import './teamTheme.scss';
 import { getDraftNotification, getTeams, createDraftNotification, updateDraftNotification, searchGroups, getGroups, verifyGroupAccess  } from '../../apis/messageListApi';
 import {
-    getInitAdaptiveCard, setCardTitle, setCardImageLink, setCardSummary,
-    setCardAuthor, setCardBtn
+    getInitAdaptiveCard, setCardTitle, setCardImageLink, setCardPosterLink, setCardVideoLink, setCardPosterUrl, setCardSummary,
+    setCardAuthor, setCardBtn, setCardPosterAction
 } from '../AdaptiveCard/adaptiveCard';
-import {
-    getInitAdaptiveVideoCard, setVideoCardTitle, setCardPosterLink, setCardVideoLink,
 
-} from '../AdaptiveCard/adaptiveCardVideo';
-import {
-    getInitAdaptiveBannerCard, setCardPosterUrl, 
-
-} from '../AdaptiveCard/adaptiveCardBanner';
 import { getBaseUrl } from '../../configVariables';
 import { ImageUtil } from '../../utility/imageutility';
 import { TFunction } from "i18next";
@@ -105,7 +99,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         super(props);
         initializeIcons();
         this.localize = this.props.t;
-        this.card = getInitAdaptiveCard(this.localize);
+        this.card = getInitAdaptiveCard(this.localize,0);
         this.setDefaultCard(this.card);
 
         this.state = {
@@ -178,7 +172,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                      adaptiveCard.parse(this.state.card);
                          let renderedCard = adaptiveCard.render();
                    
-                     document.getElementsByClassName('adaptiveCardContainer')[0].appendChild(renderedCard);
+                        document.getElementsByClassName('adaptiveCardContainer')[0].appendChild(renderedCard!);
                      if (this.state.btnLink) {
                          let link = this.state.btnLink;
                          adaptiveCard.onExecuteAction = function (action) { window.open(link, '_blank'); };
@@ -238,19 +232,22 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
     }
     public setDefaultVideoCard = (card: any) => {
         const titleAsString = this.localize("TitleText");
-        const buttonTitleAsString = this.localize("ButtonTitle");
-
-        setVideoCardTitle(card, titleAsString);
+        //const buttonTitleAsString = this.localize("ButtonTitle");
+        const summaryAsString = this.localize("Summary");
+        const authorAsString = this.localize("Author1");
+        setCardTitle(card, titleAsString);
         let imgUrl = "https://adaptivecards.io/content/poster-video.png";
         setCardPosterLink(card, imgUrl);
+        setCardSummary(card, summaryAsString);
+        setCardAuthor(card, authorAsString);
         console.log("card value from SetDefaultVideo", card);
         setCardVideoLink(card, "https://adaptivecardsblob.blob.core.windows.net/assets/AdaptiveCardsOverviewVideo.mp4");
-        setCardBtn(card, buttonTitleAsString, "https://adaptivecards.io");
+        //setCardBtn(card, buttonTitleAsString, "https://adaptivecards.io");
     }
     public setDefaultBannerCard = (card: any) => {
-        
         let imgUrl = getBaseUrl() + "/image/banner.png";
         setCardPosterUrl(card, imgUrl);
+        setCardPosterAction(card, "https://adaptivecards.io")
     }
 
     private getTeamList = async () => {
@@ -308,7 +305,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         switch (NewProps.selectedIndex) {
             case 0:
                 {
-                    this.card = getInitAdaptiveCard(this.localize);
+                    this.card = getInitAdaptiveCard(this.localize,0);
                     
                     console.log("Switch", NewProps.selectedIndex);
                     this.setState({
@@ -326,7 +323,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                 }
             case 1:
                 {
-                    this.card = getInitAdaptiveVideoCard(this.localize);
+                    this.card = getInitAdaptiveCard(this.localize, 1);
                     
                     console.log("Switch", this.state.itemListSelected);
                    this.setState({
@@ -343,7 +340,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                 }
             case 2:
                 {
-                    this.card = getInitAdaptiveBannerCard(this.localize);
+                    this.card = getInitAdaptiveCard(this.localize, 2);
 
                     console.log("Switch", this.state.itemListSelected);
                     this.setState({
@@ -390,7 +387,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
             console.log("before If statement:", draftMessageDetail.selectedTemplate);
             if (draftMessageDetail.selectedTemplate === 0) {
                 console.log("Inside get function for template:", draftMessageDetail.selectedTemplate);
-                this.card = getInitAdaptiveCard(this.localize);
+                this.card = getInitAdaptiveCard(this.localize,0);
                 this.setDefaultCard(this.card);
                 setCardTitle(this.card, draftMessageDetail.title);
                 setCardImageLink(this.card, draftMessageDetail.imageLink);
@@ -401,9 +398,9 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
             else
                 if (draftMessageDetail.selectedTemplate === 1) {
                     console.log("Inside get function for template:", draftMessageDetail.selectedTemplate);
-                    this.card = getInitAdaptiveVideoCard(this.localize);
+                    this.card = getInitAdaptiveCard(this.localize,1);
                     this.setDefaultVideoCard(this.card);
-                setVideoCardTitle(this.card, draftMessageDetail.title);
+                setCardTitle(this.card, draftMessageDetail.title);
                 setCardPosterLink(this.card, draftMessageDetail.imageLink);
                 setCardVideoLink(this.card, draftMessageDetail.videoUrl);
             }
@@ -521,6 +518,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                                         errorLabel={this.state.errorButtonUrlMessage}
                                         autoComplete="off"
                                     />
+                                   
                                 </div>
                                 <div className="adaptiveCardContainer">
                                 </div>
@@ -561,14 +559,50 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                                             autoComplete="off"
                                         />
 
-                                        
-                                        
+
+
                                         <Input
                                             className="inputField"
                                             value={this.state.videoUrl}
                                             label={this.localize("videoUrl")}
                                             placeholder={this.localize("videoUrl")}
                                             onChange={this.onvideoUrlChanged}
+                                            autoComplete="off"
+                                        />
+
+                                        <TextArea
+                                            className="inputField textArea"
+                                            autoFocus
+                                            placeholder={this.localize("Summary")}
+                                            label={this.localize("Summary")}
+                                            value={this.state.summary}
+                                            onChange={this.onSummaryChanged}
+                                        />
+
+                                        <Input
+                                            className="inputField"
+                                            value={this.state.author}
+                                            label={this.localize("Author")}
+                                            placeholder={this.localize("Author")}
+                                            onChange={this.onAuthorChanged}
+                                            autoComplete="off"
+                                        />
+                                        <Input
+                                            className="inputField"
+                                            value={this.state.btnTitle}
+                                            label={this.localize("ButtonTitle")}
+                                            placeholder={this.localize("ButtonTitle")}
+                                            onChange={this.onBtnTitleChanged}
+                                            autoComplete="off"
+                                        />
+
+                                        <Input
+                                            className="inputField"
+                                            value={this.state.btnLink}
+                                            label={this.localize("ButtonURL")}
+                                            placeholder={this.localize("ButtonURL")}
+                                            onChange={this.onBtnLinkChanged}
+                                            errorLabel={this.state.errorButtonUrlMessage}
                                             autoComplete="off"
                                         />
                                        
@@ -591,7 +625,15 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                         <div className="taskModule">
                             <div className="formContainer">
                                 <div className="formContentContainer" >
-                                   
+                                    <Input
+                                        className="inputField"
+                                        value={this.state.title}
+                                        label={this.localize("TitleText")}
+                                        placeholder={this.localize("PlaceHolderTitle")}
+                                        onChange={this.onTitleChanged}
+                                        autoComplete="off"
+                                        required
+                                    />
 
                                     <Input
                                         className="inputField"
@@ -600,6 +642,16 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                                         placeholder={this.localize("ImageURL")}
                                         onChange={this.onImageLinkChanged}
                                         errorLabel={this.state.errorImageUrlMessage}
+                                        autoComplete="off"
+                                    />
+
+                                    <Input
+                                        className="inputField"
+                                        value={this.state.btnLink}
+                                        label={this.localize("HyperLink")}
+                                        placeholder={this.localize("HyperLink")}
+                                        onChange={this.onBtnLinkChanged}
+                                        errorLabel={this.state.errorButtonUrlMessage}
                                         autoComplete="off"
                                     />
 
@@ -1051,7 +1103,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         }
         else if (this.state.itemListSelected == 1) {
             let showDefaultCard = (!event.target.value && !this.state.imageLink && !this.state.videoUrl);
-            setVideoCardTitle(this.card, event.target.value);
+            setCardTitle(this.card, event.target.value);
             setCardPosterLink(this.card, this.state.imageLink);
             console.log("Card in SetTitle", event.target.value);
             setCardVideoLink(this.card, this.state.videoUrl);
@@ -1061,6 +1113,25 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
             }, () => {
                 if (showDefaultCard) {
                     this.setDefaultVideoCard(this.card);
+                }
+                this.updateCard();
+            });
+        }
+        else if (this.state.itemListSelected == 2) {
+           
+            
+                setCardPosterAction(this.card, event.target.value);
+            let showDefaultCard = (!event.target.value && !this.state.imageLink);
+            setCardTitle(this.card, event.target.value);
+            setCardPosterUrl(this.card, this.state.imageLink);
+            setCardPosterAction(this.card, this.state.btnLink);
+            console.log("Card in SetTitle", event.target.value);
+            this.setState({
+                title: event.target.value,
+                card: this.card
+            }, () => {
+                if (showDefaultCard) {
+                    this.setDefaultBannerCard(this.card);
                 }
                 this.updateCard();
             });
@@ -1097,7 +1168,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         }
         else if (this.state.itemListSelected == 1) {
             let showDefaultCard = (!this.state.title && !this.state.imageLink && !this.state.videoUrl);
-            setVideoCardTitle(this.card, this.state.title);
+            setCardTitle(this.card, this.state.title);
             setCardPosterLink(this.card, event.target.value);
             setCardVideoLink(this.card, this.state.videoUrl);
             this.setState({
@@ -1111,7 +1182,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
             });
         }
         else if (this.state.itemListSelected == 2) {
-            let showDefaultCard = (!event.target.value);
+            let showDefaultCard = (!event.target.value && !this.state.btnLink);
             setCardPosterUrl(this.card, event.target.value);
             this.setState({
                 imageLink: event.target.value,
@@ -1126,43 +1197,85 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
     }
 
     private onSummaryChanged = (event: any) => {
-        let showDefaultCard = (!this.state.title && !this.state.imageLink && !event.target.value && !this.state.author && !this.state.btnTitle && !this.state.btnLink);
-        setCardTitle(this.card, this.state.title);
-        setCardImageLink(this.card, this.state.imageLink);
-        setCardSummary(this.card, event.target.value);
-        setCardAuthor(this.card, this.state.author);
-        setCardBtn(this.card, this.state.btnTitle, this.state.btnLink);
-        this.setState({
-            summary: event.target.value,
-            card: this.card
-        }, () => {
-            if (showDefaultCard) {
-                this.setDefaultCard(this.card);
+        if (this.state.itemListSelected == 0) {
+            let showDefaultCard = (!this.state.title && !this.state.imageLink && !event.target.value && !this.state.author && !this.state.btnTitle && !this.state.btnLink);
+            setCardTitle(this.card, this.state.title);
+            setCardImageLink(this.card, this.state.imageLink);
+            setCardSummary(this.card, event.target.value);
+            setCardAuthor(this.card, this.state.author);
+            setCardBtn(this.card, this.state.btnTitle, this.state.btnLink);
+            this.setState({
+                summary: event.target.value,
+                card: this.card
+            }, () => {
+                if (showDefaultCard) {
+                    this.setDefaultCard(this.card);
+                }
+                this.updateCard();
+            });
+        }
+        else
+            if (this.state.itemListSelected == 1) {
+                let showDefaultCard = (!this.state.title && !this.state.imageLink && !event.target.value && !this.state.author && !this.state.btnTitle && !this.state.btnLink);
+                setCardTitle(this.card, this.state.title);
+                setCardPosterLink(this.card, this.state.imageLink);
+                setCardVideoLink(this.card, this.state.videoUrl);
+                setCardSummary(this.card, event.target.value);
+                setCardAuthor(this.card, this.state.author);
+                setCardBtn(this.card, this.state.btnTitle, this.state.btnLink);
+                this.setState({
+                    summary: event.target.value,
+                    card: this.card
+                }, () => {
+                    if (showDefaultCard) {
+                        this.setDefaultVideoCard(this.card);
+                    }
+                    this.updateCard();
+                });
             }
-            this.updateCard();
-        });
     }
 
     private onAuthorChanged = (event: any) => {
-        let showDefaultCard = (!this.state.title && !this.state.imageLink && !this.state.summary && !event.target.value && !this.state.btnTitle && !this.state.btnLink);
-        setCardTitle(this.card, this.state.title);
-        setCardImageLink(this.card, this.state.imageLink);
-        setCardSummary(this.card, this.state.summary);
-        setCardAuthor(this.card, event.target.value);
-        setCardBtn(this.card, this.state.btnTitle, this.state.btnLink);
-        this.setState({
-            author: event.target.value,
-            card: this.card
-        }, () => {
-            if (showDefaultCard) {
-                this.setDefaultCard(this.card);
+        if (this.state.itemListSelected == 0) {
+            let showDefaultCard = (!this.state.title && !this.state.imageLink && !this.state.summary && !event.target.value && !this.state.btnTitle && !this.state.btnLink);
+            setCardTitle(this.card, this.state.title);
+            setCardImageLink(this.card, this.state.imageLink);
+            setCardSummary(this.card, this.state.summary);
+            setCardAuthor(this.card, event.target.value);
+            setCardBtn(this.card, this.state.btnTitle, this.state.btnLink);
+            this.setState({
+                author: event.target.value,
+                card: this.card
+            }, () => {
+                if (showDefaultCard) {
+                    this.setDefaultCard(this.card);
+                }
+                this.updateCard();
+            });
+        }
+        else
+            if (this.state.itemListSelected == 1) {
+                let showDefaultCard = (!this.state.title && !this.state.imageLink && !this.state.summary && !event.target.value && !this.state.btnTitle && !this.state.btnLink);
+                setCardTitle(this.card, this.state.title);
+                setCardPosterLink(this.card, this.state.imageLink);
+                setCardVideoLink(this.card, this.state.videoUrl);
+                setCardSummary(this.card, this.state.summary);
+                setCardAuthor(this.card, event.target.value);
+                setCardBtn(this.card, this.state.btnTitle, this.state.btnLink);
+                this.setState({
+                    author: event.target.value,
+                    card: this.card
+                }, () => {
+                    if (showDefaultCard) {
+                        this.setDefaultVideoCard(this.card);
+                    }
+                    this.updateCard();
+                });
             }
-            this.updateCard();
-        });
     }
     private onvideoUrlChanged = (event: any) => {
         let showDefaultCard = (!this.state.title && !this.state.imageLink && !event.target.value);
-        setVideoCardTitle(this.card, this.state.title);
+        setCardTitle(this.card, this.state.title);
         setCardPosterLink(this.card, this.state.imageLink);
         setCardVideoLink(this.card, event.target.value);
         this.setState({
@@ -1215,33 +1328,59 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                 errorButtonUrlMessage: ""
             });
         }
-
-        const showDefaultCard = (!this.state.title && !this.state.imageLink && !this.state.summary && !this.state.author && !this.state.btnTitle && !event.target.value);
-        setCardTitle(this.card, this.state.title);
-        setCardSummary(this.card, this.state.summary);
-        setCardAuthor(this.card, this.state.author);
-        setCardImageLink(this.card, this.state.imageLink);
-        if (this.state.btnTitle && event.target.value) {
-            setCardBtn(this.card, this.state.btnTitle, event.target.value);
-            this.setState({
-                btnLink: event.target.value,
-                card: this.card
-            }, () => {
-                if (showDefaultCard) {
-                    this.setDefaultCard(this.card);
-                }
-                this.updateCard();
-            });
-        } else {
-            delete this.card.actions;
-            this.setState({
-                btnLink: event.target.value
-            }, () => {
-                if (showDefaultCard) {
-                    this.setDefaultCard(this.card);
-                }
-                this.updateCard();
-            });
+        if (this.state.itemListSelected == 2) {
+            const showDefaultCard = (!this.state.imageLink && !event.target.value);
+            if (event.target.value) {
+                setCardPosterAction(this.card, event.target.value);
+                this.setState({
+                    btnLink: event.target.value,
+                    card: this.card
+                }, () => {
+                    if (showDefaultCard) {
+                        this.setDefaultCard(this.card);
+                    }
+                    this.updateCard();
+                });
+            } else {
+                delete this.card.actions;
+                this.setState({
+                    btnLink: event.target.value
+                }, () => {
+                    if (showDefaultCard) {
+                        this.setDefaultCard(this.card);
+                    }
+                    this.updateCard();
+                });
+            }
+        }
+        else {
+            const showDefaultCard = (!this.state.title && !this.state.imageLink && !this.state.summary && !this.state.author && !this.state.btnTitle && !event.target.value);
+            setCardTitle(this.card, this.state.title);
+            setCardSummary(this.card, this.state.summary);
+            setCardAuthor(this.card, this.state.author);
+            setCardImageLink(this.card, this.state.imageLink);
+            if (this.state.btnTitle && event.target.value) {
+                setCardBtn(this.card, this.state.btnTitle, event.target.value);
+                this.setState({
+                    btnLink: event.target.value,
+                    card: this.card
+                }, () => {
+                    if (showDefaultCard) {
+                        this.setDefaultCard(this.card);
+                    }
+                    this.updateCard();
+                });
+            } else {
+                delete this.card.actions;
+                this.setState({
+                    btnLink: event.target.value
+                }, () => {
+                    if (showDefaultCard) {
+                        this.setDefaultCard(this.card);
+                    }
+                    this.updateCard();
+                });
+            }
         }
     }
 
@@ -1251,9 +1390,9 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         const renderedCard = adaptiveCard.render();
         const container = document.getElementsByClassName('adaptiveCardContainer')[0].firstChild;
         if (container != null) {
-            container.replaceWith(renderedCard);
+            container.replaceWith(renderedCard!);
         } else {
-            document.getElementsByClassName('adaptiveCardContainer')[0].appendChild(renderedCard);
+            document.getElementsByClassName('adaptiveCardContainer')[0].appendChild(renderedCard!);
         }
         const link = this.state.btnLink;
         adaptiveCard.onExecuteAction = function (action) { window.open(link, '_blank'); }

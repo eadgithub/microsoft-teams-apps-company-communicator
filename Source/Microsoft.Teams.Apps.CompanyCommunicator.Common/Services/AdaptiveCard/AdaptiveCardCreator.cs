@@ -48,7 +48,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
             string buttonTitle,
             string buttonUrl)
         {
-            var version = new AdaptiveSchemaVersion(1, 0);
+            var version = new AdaptiveSchemaVersion(1, 2);
             AdaptiveCard card = new AdaptiveCard(version);
 
             card.Body.Add(new AdaptiveTextBlock()
@@ -56,6 +56,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
                 Text = title,
                 Size = AdaptiveTextSize.ExtraLarge,
                 Weight = AdaptiveTextWeight.Bolder,
+                HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
                 Wrap = true,
             });
 
@@ -75,6 +76,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
                 card.Body.Add(new AdaptiveTextBlock()
                 {
                     Text = summary,
+                    HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
                     Wrap = true,
                 });
             }
@@ -99,6 +101,37 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
                     Url = new Uri(buttonUrl, UriKind.RelativeOrAbsolute),
                 });
             }
+            card.Body.Add(new AdaptiveColumnSet()
+            {
+                Columns = new List<AdaptiveColumn>() {
+                    new AdaptiveColumn()
+                    {
+                        Width = AdaptiveColumnWidth.Stretch,
+                        VerticalContentAlignment = AdaptiveVerticalContentAlignment.Center,
+                        Items = new List<AdaptiveElement>()
+                        {
+                            new AdaptiveImage()
+                            {
+                                Url = new Uri("https://blcompanycommunicator.azurewebsites.net/image/DHLogo.png", UriKind.RelativeOrAbsolute),
+                                Size = AdaptiveImageSize.Large,
+                            },
+                        },
+                    },
+                    new AdaptiveColumn()
+                    {
+                        Width = AdaptiveColumnWidth.Stretch,
+                        VerticalContentAlignment = AdaptiveVerticalContentAlignment.Bottom,
+                        Items = new List<AdaptiveElement>()
+                        {
+                            new AdaptiveImage()
+                            {
+                                Url = new Uri("https://blcompanycommunicator.azurewebsites.net/image/FTGOT.png", UriKind.RelativeOrAbsolute),
+                                Size = AdaptiveImageSize.Stretch,
+                            },
+                        },
+                    },
+                    },
+            });
 
             return card;
         }
@@ -131,7 +164,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
 
             return card;
         }
-        public AdaptiveCard CreateAdaptiveBannerCard(string imageUrl)
+        public AdaptiveCard CreateAdaptiveBannerCard(string imageUrl, string buttonUrl)
         {
             var version = new AdaptiveSchemaVersion(1, 1);
             AdaptiveCard card = new AdaptiveCard(version);
@@ -146,18 +179,22 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
                     PixelHeight=800,
                     Size=AdaptiveImageSize.Stretch,
                     AltText = string.Empty,
+                    SelectAction = new AdaptiveOpenUrlAction()
+                    {
+                        Url = new Uri(buttonUrl, UriKind.RelativeOrAbsolute),
+                    },
                 });
             }
 
             return card;
         }
-        public string GetCardJson(NotificationDataEntity notificationDataEntity)
+    public string GetCardJson(NotificationDataEntity notificationDataEntity)
         {
-            switch(notificationDataEntity.selectedTemplate)
+            switch (notificationDataEntity.selectedTemplate)
             {
                 case 0:
                     {
-                        var x=this.CreateAdaptiveCard(
+                        var x = this.CreateAdaptiveCard(
                 notificationDataEntity.Title,
                 notificationDataEntity.ImageLink,
                 notificationDataEntity.Summary,
@@ -165,7 +202,6 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
                 notificationDataEntity.ButtonTitle,
                 notificationDataEntity.ButtonLink);
                         return x.ToJson();
-                        break;
                     }
                 case 1:
                     {
@@ -174,14 +210,12 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
                 notificationDataEntity.ImageLink,
                 notificationDataEntity.videoUrl);
                         return x.ToJson();
-                        break;
                     }
                 case 2:
                     {
-                        var x=CreateAdaptiveBannerCard(notificationDataEntity.ImageLink);
+                        var x = this.CreateAdaptiveBannerCard(notificationDataEntity.ImageLink, notificationDataEntity.ButtonLink);
                         return x.ToJson();
-                        break;
-                    }     
+                    }
             }
             return null;
         }

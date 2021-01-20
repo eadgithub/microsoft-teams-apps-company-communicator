@@ -9,11 +9,9 @@ import './sendConfirmationTaskModule.scss';
 import { getDraftNotification, getConsentSummaries, sendDraftNotification } from '../../apis/messageListApi';
 import {
     getInitAdaptiveCard, setCardTitle, setCardImageLink, setCardSummary,
-    setCardAuthor, setCardBtn
+    setCardAuthor, setCardBtn, setCardVideoLink, setCardPosterLink, setCardPosterUrl, setCardPosterAction
 } from '../AdaptiveCard/adaptiveCard';
-import {
-    getInitAdaptiveVideoCard, setVideoCardTitle, setCardPosterLink, setCardVideoLink,
-} from '../AdaptiveCard/adaptiveCardVideo';
+
 import { ImageUtil } from '../../utility/imageutility';
 import { TFunction } from "i18next";
 
@@ -35,7 +33,7 @@ export interface IMessage {
     imageLink?: string;
     summary?: string;
     author?: string;
-    buttonLink?: string;
+    buttonLink: string;
     buttonTitle?: string;
     senderName?: string;
     departmentName?: string;
@@ -62,7 +60,8 @@ class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskMod
     private initMessage = {
         id: "",
         title: "",
-        videoUrl:""
+        videoUrl: "",
+        buttonLink:"",
     };
 
     private card: any;
@@ -70,7 +69,7 @@ class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskMod
     constructor(props: SendConfirmationTaskModuleProps) {
         super(props);
         this.localize = this.props.t;
-        this.card = getInitAdaptiveCard(this.localize);
+        this.card = getInitAdaptiveCard(this.localize,0);
 
         this.state = {
             message: this.initMessage,
@@ -80,7 +79,8 @@ class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskMod
             groupNames: [],
             allUsers: false,
             messageId: 0,
-            selectedTemplate:0,
+            selectedTemplate: 0,
+            
         };
     }
 
@@ -119,17 +119,23 @@ class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskMod
                                 }
                                 else
                                     if (response.data.selectedTemplate === 1) {
-                                        this.card = getInitAdaptiveVideoCard(this.localize);
-                                        setVideoCardTitle(this.card, this.state.message.title);
+                                        this.card = getInitAdaptiveCard(this.localize, 1);
+                                        setCardTitle(this.card, this.state.message.title);
                                         setCardVideoLink(this.card, this.state.message.videoUrl);
                                         setCardPosterLink(this.card, this.state.message.imageLink);
                                     }
+                                    else
+                                        if (response.data.selectedTemplate === 2) {
+                                            this.card = getInitAdaptiveCard(this.localize, 2);
+                                            setCardPosterUrl(this.card, this.state.message.imageLink);
+                                            setCardPosterAction(this.card, this.state.message.buttonLink);
+                                        }
                             console.log("Confirmation Page Card ", this.card)
 
                             let adaptiveCard = new AdaptiveCards.AdaptiveCard();
                             adaptiveCard.parse(this.card);
                             let renderedCard = adaptiveCard.render();
-                            document.getElementsByClassName('adaptiveCardContainer')[0].appendChild(renderedCard);
+                            document.getElementsByClassName('adaptiveCardContainer')[0].appendChild(renderedCard!);
                             if (this.state.message.buttonLink) {
                                 let link = this.state.message.buttonLink;
                                 adaptiveCard.onExecuteAction = function (action) { window.open(link, '_blank'); };

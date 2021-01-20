@@ -71,7 +71,7 @@ class StatusTaskModule extends React.Component<StatusTaskModuleProps, IStatusSta
 
         this.localize = this.props.t;
 
-        this.card = getInitAdaptiveCard(this.props.t);
+        this.card = getInitAdaptiveCard(this.props.t,0);
 
         this.state = {
             message: this.initMessage,
@@ -100,7 +100,7 @@ class StatusTaskModule extends React.Component<StatusTaskModuleProps, IStatusSta
                     let adaptiveCard = new AdaptiveCards.AdaptiveCard();
                     adaptiveCard.parse(this.card);
                     let renderedCard = adaptiveCard.render();
-                    document.getElementsByClassName('adaptiveCardContainer')[0].appendChild(renderedCard);
+                    document.getElementsByClassName('adaptiveCardContainer')[0].appendChild(renderedCard!);
                     let link = this.state.message.buttonLink;
                     adaptiveCard.onExecuteAction = function (action) { window.open(link, '_blank'); }
                 });
