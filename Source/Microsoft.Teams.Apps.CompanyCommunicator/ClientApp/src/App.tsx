@@ -6,6 +6,7 @@ import TemplateSelector from './components/TemplateSelector/templateSelector';
 import NewMessage from './components/NewMessage/newMessage';
 import StatusTaskModule from './components/StatusTaskModule/statusTaskModule';
 import './App.scss';
+import videoPlayer from './components/VideoPlayer/videoPlayer'
 import { Provider, themes } from '@stardust-ui/react';
 import SendConfirmationTaskModule from './components/SendConfirmationTaskModule/sendConfirmationTaskModule';
 import * as microsoftTeams from '@microsoft/teams-js';
@@ -105,6 +106,7 @@ class App extends React.Component<{}, IAppState> {
 						<BrowserRouter>
 							<Switch>
 								<Route exact path="/configtab" component={Configuration} />
+								<Route exact path="/videoPlayer/:id" component={videoPlayer}/>
 								<Route exact path="/messages" component={TabContainer} />
 								<Route exact path="/newmessage" component={NewMessage} />
 								<Route exact path="/newmessage/:id" component={NewMessage} />

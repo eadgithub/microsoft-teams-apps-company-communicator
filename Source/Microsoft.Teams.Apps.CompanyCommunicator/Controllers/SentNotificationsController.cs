@@ -264,6 +264,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
                 CreatedBy = notificationEntity.CreatedBy,
                 SenderName=notificationEntity.SenderName,
                 DepartmentName=notificationEntity.DepartmentName,
+                VideoUrl=notificationEntity.videoUrl,
             };
 
             return this.Ok(result);

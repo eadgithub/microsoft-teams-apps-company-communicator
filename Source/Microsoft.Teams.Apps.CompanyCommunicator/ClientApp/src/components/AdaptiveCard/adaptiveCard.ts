@@ -173,6 +173,29 @@ export const getInitAdaptiveCard = (t: TFunction, Type: number) => {
                 );
                       
             }
+        case 3:
+            {
+                return (
+                    {
+                        "type": "AdaptiveCard",
+                        "body": [
+                            
+                            {
+                                "type": "Media",
+                                "poster": "${ThumbnailUrl}",
+                                "sources": [
+                                    {
+                                        "mimeType": "video/mp4",
+                                        "url": "${Url}"
+                                    }
+                                ]
+                            }
+                        ],
+                        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                        "version": "1.2"
+                    }
+                );
+            }
     }
 }
 
@@ -202,6 +225,9 @@ export const setCardPosterLink = (card: any, imageLink?: string) => {
 }
 export const setCardVideoLink = (card: any, videoLink?: string) => {
     card.body[1].sources[0].url = videoLink;
+}
+export const setCardVideoPlayerUrl = (card: any, videoLink?: string) => {
+    card.body[0].sources[0].url = videoLink;
 }
 export const getCardSummary = (card: any) => {
     return card.body[2].text;

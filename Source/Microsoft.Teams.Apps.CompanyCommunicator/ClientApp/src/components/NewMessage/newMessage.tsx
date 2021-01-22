@@ -500,25 +500,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                                         onChange={this.onAuthorChanged}
                                         autoComplete="off"
                                     />
-                                    <Input
-                                        className="inputField"
-                                        value={this.state.btnTitle}
-                                        label={this.localize("ButtonTitle")}
-                                        placeholder={this.localize("ButtonTitle")}
-                                        onChange={this.onBtnTitleChanged}
-                                        autoComplete="off"
-                                    />
-
-                                    <Input
-                                        className="inputField"
-                                        value={this.state.btnLink}
-                                        label={this.localize("ButtonURL")}
-                                        placeholder={this.localize("ButtonURL")}
-                                        onChange={this.onBtnLinkChanged}
-                                        errorLabel={this.state.errorButtonUrlMessage}
-                                        autoComplete="off"
-                                    />
-                                   
+                         
                                 </div>
                                 <div className="adaptiveCardContainer">
                                 </div>
@@ -587,24 +569,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                                             onChange={this.onAuthorChanged}
                                             autoComplete="off"
                                         />
-                                        <Input
-                                            className="inputField"
-                                            value={this.state.btnTitle}
-                                            label={this.localize("ButtonTitle")}
-                                            placeholder={this.localize("ButtonTitle")}
-                                            onChange={this.onBtnTitleChanged}
-                                            autoComplete="off"
-                                        />
 
-                                        <Input
-                                            className="inputField"
-                                            value={this.state.btnLink}
-                                            label={this.localize("ButtonURL")}
-                                            placeholder={this.localize("ButtonURL")}
-                                            onChange={this.onBtnLinkChanged}
-                                            errorLabel={this.state.errorButtonUrlMessage}
-                                            autoComplete="off"
-                                        />
                                        
                                     </div>
                                     <div className="adaptiveCardContainer">

@@ -138,9 +138,14 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
         public AdaptiveCard CreateAdaptiveVideoCard(
             string title,
             string imageUrl,
-            string videoUrl)
+            string videoUrl,
+            string summary,
+            string author,
+            string buttonTitle,
+            string buttonUrl, 
+            string id)
         {
-            var version = new AdaptiveSchemaVersion(1, 1);
+            var version = new AdaptiveSchemaVersion(1, 2);
             AdaptiveCard card = new AdaptiveCard(version);
 
             card.Body.Add(new AdaptiveTextBlock()
@@ -148,19 +153,86 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
                 Text = title,
                 Size = AdaptiveTextSize.ExtraLarge,
                 Weight = AdaptiveTextWeight.Bolder,
-                Wrap = true,
                 HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
+                Wrap = true,
             });
 
             if (!string.IsNullOrWhiteSpace(imageUrl))
             {
-                card.Body.Add(new AdaptiveMedia()
+                card.Body.Add(new AdaptiveImage()
                 {
-                 Sources = new List<AdaptiveMediaSource>() { new AdaptiveMediaSource("video/mp4", videoUrl) },
-                 Poster = imageUrl,
-                 AltText = string.Empty,
+                    Url = new Uri(imageUrl, UriKind.RelativeOrAbsolute),
+                    Spacing = AdaptiveSpacing.Default,
+                    Size = AdaptiveImageSize.Stretch,
+                    AltText = string.Empty,
+                    SelectAction = new AdaptiveOpenUrlAction()
+                    {
+                        Url = new Uri("https://teams.microsoft.com/l/task/1c07cd26-a088-4db8-8928-ace382fa219f?url=https://companycommunicator.blueridgeit.com/videoPlayer/" + id + "&height=300&width=400&title=Video", UriKind.RelativeOrAbsolute),
+                    },
                 });
             }
+
+            if (!string.IsNullOrWhiteSpace(summary))
+            {
+                card.Body.Add(new AdaptiveTextBlock()
+                {
+                    Text = summary,
+                    HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
+                    Wrap = true,
+                });
+            }
+
+            if (!string.IsNullOrWhiteSpace(author))
+            {
+                card.Body.Add(new AdaptiveTextBlock()
+                {
+                    Text = author,
+                    Size = AdaptiveTextSize.Small,
+                    Weight = AdaptiveTextWeight.Lighter,
+                    Wrap = true,
+                });
+            }
+
+            if (!string.IsNullOrWhiteSpace(buttonTitle)
+                && !string.IsNullOrWhiteSpace(buttonUrl))
+            {
+                card.Actions.Add(new AdaptiveOpenUrlAction()
+                {
+                    Title = buttonTitle,
+                    Url = new Uri(buttonUrl, UriKind.RelativeOrAbsolute),
+                });
+            }
+            card.Body.Add(new AdaptiveColumnSet()
+            {
+                Columns = new List<AdaptiveColumn>() {
+                    new AdaptiveColumn()
+                    {
+                        Width = AdaptiveColumnWidth.Stretch,
+                        VerticalContentAlignment = AdaptiveVerticalContentAlignment.Center,
+                        Items = new List<AdaptiveElement>()
+                        {
+                            new AdaptiveImage()
+                            {
+                                Url = new Uri("https://blcompanycommunicator.azurewebsites.net/image/DHLogo.png", UriKind.RelativeOrAbsolute),
+                                Size = AdaptiveImageSize.Large,
+                            },
+                        },
+                    },
+                    new AdaptiveColumn()
+                    {
+                        Width = AdaptiveColumnWidth.Stretch,
+                        VerticalContentAlignment = AdaptiveVerticalContentAlignment.Bottom,
+                        Items = new List<AdaptiveElement>()
+                        {
+                            new AdaptiveImage()
+                            {
+                                Url = new Uri("https://blcompanycommunicator.azurewebsites.net/image/FTGOT.png", UriKind.RelativeOrAbsolute),
+                                Size = AdaptiveImageSize.Stretch,
+                            },
+                        },
+                    },
+                    },
+            });
 
             return card;
         }
@@ -208,7 +280,12 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
                         var x = this.CreateAdaptiveVideoCard(
                 notificationDataEntity.Title,
                 notificationDataEntity.ImageLink,
-                notificationDataEntity.videoUrl);
+                notificationDataEntity.videoUrl,
+                notificationDataEntity.Summary,
+                notificationDataEntity.Author,
+                notificationDataEntity.ButtonTitle,
+                notificationDataEntity.ButtonLink,
+                notificationDataEntity.Id);
                         return x.ToJson();
                     }
                 case 2:

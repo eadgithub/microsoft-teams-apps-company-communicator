@@ -114,6 +114,7 @@ class Messages extends React.Component<IMessageProps, IMessageState> {
 				content: this.messageContent(message),
 				onClick: (): void => {
 					let url = getBaseUrl() + '/viewstatus/' + message.id + '?locale={locale}';
+					console.log("Message ID:", message.id);
 					this.onOpenTaskModule(null, url, this.localize('ViewStatus'));
 				},
 				styles: { margin: '0.2rem 0.2rem 0 0' }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { withTranslation, WithTranslation } from "react-i18next";
-import './statusTaskModule.scss';
+import './videoPlayer.scss';
 import { getSentNotification, exportNotification } from '../../apis/messageListApi';
 import { RouteComponentProps } from 'react-router-dom';
 import * as AdaptiveCards from "adaptivecards";
@@ -9,8 +9,7 @@ import { TooltipHost } from 'office-ui-fabric-react';
 import { Icon, Loader, List, Image, Button, IconProps } from '@stardust-ui/react';
 import * as microsoftTeams from "@microsoft/teams-js";
 import {
-    getInitAdaptiveCard, setCardTitle, setCardImageLink, setCardSummary,
-    setCardAuthor, setCardBtn
+    getInitAdaptiveCard, setCardVideoPlayerUrl
 } from '../AdaptiveCard/adaptiveCard';
 import { ImageUtil } from '../../utility/imageutility';
 import { formatDate, formatDuration, formatNumber } from '../../i18n';
@@ -32,7 +31,6 @@ export interface IMessage {
     unknown?: string;
     sentDate?: string;
     imageLink?: string;
-    videoUrl?: string;
     summary?: string;
     author?: string;
     buttonLink?: string;
@@ -47,6 +45,7 @@ export interface IMessage {
     warningMessage?: string;
     canDownload?: boolean;
     sendingCompleted?: boolean;
+    videoUrl?: string;
 }
 
 export interface IStatusState {
@@ -55,9 +54,9 @@ export interface IStatusState {
     page: string;
 }
 
-interface StatusTaskModuleProps extends RouteComponentProps, WithTranslation { }
+interface videoPlayerProps extends RouteComponentProps, WithTranslation { }
 
-class StatusTaskModule extends React.Component<StatusTaskModuleProps, IStatusState> {
+class videoPlayer extends React.Component<videoPlayerProps, IStatusState> {
     readonly localize: TFunction;
     private initMessage = {
         id: "",
@@ -66,18 +65,18 @@ class StatusTaskModule extends React.Component<StatusTaskModuleProps, IStatusSta
 
     private card: any;
 
-    constructor(props: StatusTaskModuleProps) {
+    constructor(props: videoPlayerProps) {
         super(props);
         initializeIcons();
 
         this.localize = this.props.t;
 
-        this.card = getInitAdaptiveCard(this.props.t,0);
+        this.card = getInitAdaptiveCard(this.props.t, 3);
 
         this.state = {
             message: this.initMessage,
             loader: true,
-            page: "ViewStatus",
+            page: "videoPlayer",
         };
     }
 
@@ -90,14 +89,8 @@ class StatusTaskModule extends React.Component<StatusTaskModuleProps, IStatusSta
                 this.setState({
                     loader: false
                 }, () => {
-                    setCardTitle(this.card, this.state.message.title);
-                    setCardImageLink(this.card, this.state.message.imageLink);
-                    setCardSummary(this.card, this.state.message.summary);
-                    setCardAuthor(this.card, this.state.message.author);
-                    if (this.state.message.buttonTitle !== "" && this.state.message.buttonLink !== "") {
-                        setCardBtn(this.card, this.state.message.buttonTitle, this.state.message.buttonLink);
-                    }
-
+                        console.log("Message in Video", this.state.message);
+                    setCardVideoPlayerUrl(this.card, this.state.message.videoUrl);
                     let adaptiveCard = new AdaptiveCards.AdaptiveCard();
                     adaptiveCard.parse(this.card);
                     let renderedCard = adaptiveCard.render();
@@ -136,64 +129,15 @@ class StatusTaskModule extends React.Component<StatusTaskModuleProps, IStatusSta
             );
         } else {
             const downloadIcon: IconProps = { name: 'download', size: "medium" };
-            if (this.state.page === "ViewStatus") {
+            if (this.state.page === "videoPlayer") {
                 return (
                     <div className="taskModule">
                         <div className="formContainer">
-                            <div className="formContentContainer" >
-                                <div className="contentField">
-                                    <h3>{this.localize("TitleText")}</h3>
-                                    <span>{this.state.message.title}</span>
-                                </div>
-                                <div className="contentField">
-                                    <h3>{this.localize("SendingStarted")}</h3>
-                                    <span>{this.state.message.sendingStartedDate}</span>
-                                </div>
-                                <div className="contentField">
-                                    <h3>{this.localize("Completed")}</h3>
-                                    <span>{this.state.message.sentDate}</span>
-                                </div>
-                                <div className="contentField">
-                                    <h3>{this.localize("Duration")}</h3>
-                                    <span>{this.state.message.sendingDuration}</span>
-                                </div>
-                                <div className="contentField">
-                                    <h3>{this.localize("Results")}</h3>
-                                    <label>{this.localize("Success", { "SuccessCount": this.state.message.succeeded })}</label>
-                                    <br />
-                                    <label>{this.localize("Failure", { "FailureCount": this.state.message.failed })}</label>
-                                    <br />
-                                    <label>{this.localize("Reactions", { "Reactions": this.state.message.reactions })}</label>
-                                    {this.state.message.unknown &&
-                                        <>
-                                        <label>{this.localize("Unknown", { "UnknownCount": this.state.message.unknown })}</label>
-                                        </>
-                                    }
-                                </div>
-                                <div className="contentField">
-                                    {this.renderAudienceSelection()}
-                                </div>
-                                <div className="contentField">
-                                    {this.renderErrorMessage()}
-                                </div>
-                                <div className="contentField">
-                                    {this.renderWarningMessage()}
-                                </div>
-                            </div>
                             <div className="adaptiveCardContainer">
                             </div>
                         </div>
 
-                        <div className="footerContainer">
-                            <div className={this.state.message.canDownload ? "" : "disabled"}>
-                                <div className="buttonContainer">
-                                    <Loader id="sendingLoader" className="hiddenLoader sendingLoader" size="smallest" label={this.localize("ExportLabel")} labelPosition="end" />
-                                    <TooltipHost content={!this.state.message.sendingCompleted ? "" : (this.state.message.canDownload ? "" : this.localize("ExportButtonProgressText"))} calloutProps={{ gapSpace: 0 }}>
-                                        <Button icon={downloadIcon} disabled={!this.state.message.canDownload || !this.state.message.sendingCompleted} content={this.localize("ExportButtonText")} id="exportBtn" onClick={this.onExport} primary />
-                                    </TooltipHost>
-                                </div>
-                            </div>
-                        </div>
+                       
                     </div>
                 );
             }
@@ -273,61 +217,8 @@ class StatusTaskModule extends React.Component<StatusTaskModuleProps, IStatusSta
         }
         return resultedTeams;
     }
-    private renderAudienceSelection = () => {
-        if (this.state.message.teamNames && this.state.message.teamNames.length > 0) {
-            return (
-                <div>
-                    <h3>{this.localize("SentToGeneralChannel")}</h3>
-                    <List items={this.getItemList(this.state.message.teamNames)} />
-                </div>);
-        } else if (this.state.message.rosterNames && this.state.message.rosterNames.length > 0) {
-            return (
-                <div>
-                    <h3>{this.localize("SentToRosters")}</h3>
-                    <List items={this.getItemList(this.state.message.rosterNames)} />
-                </div>);
-        } else if (this.state.message.groupNames && this.state.message.groupNames.length > 0) {
-            return (
-                <div>
-                    <h3>{this.localize("SentToGroups1")}</h3>
-                    <span>{this.localize("SentToGroups2")}</span>
-                    <List items={this.getItemList(this.state.message.groupNames)} />
-                </div>);
-        } else if (this.state.message.allUsers) {
-            return (
-                <div>
-                    <h3>{this.localize("SendToAllUsers")}</h3>
-                </div>);
-        } else {
-            return (<div></div>);
-        }
-    }
-    private renderErrorMessage = () => {
-        if (this.state.message.errorMessage) {
-            return (
-                <div>
-                    <h3>{this.localize("Errors")}</h3>
-                    <span>{this.state.message.errorMessage}</span>
-                </div>
-            );
-        } else {
-            return (<div></div>);
-        }
-    }
 
-    private renderWarningMessage = () => {
-        if (this.state.message.warningMessage) {
-            return (
-                <div>
-                    <h3>{this.localize("Warnings")}</h3>
-                    <span>{this.state.message.warningMessage}</span>
-                </div>
-            );
-        } else {
-            return (<div></div>);
-        }
-    }
 }
 
-const StatusTaskModuleWithTranslation = withTranslation()(StatusTaskModule);
-export default StatusTaskModuleWithTranslation;
+const videoPlayerWithTranslation = withTranslation()(videoPlayer);
+export default videoPlayerWithTranslation;
