@@ -12,7 +12,7 @@ import './newMessage.scss';
 import './teamTheme.scss';
 import { getDraftNotification, getTeams, createDraftNotification, updateDraftNotification, searchGroups, getGroups, verifyGroupAccess  } from '../../apis/messageListApi';
 import {
-    getInitAdaptiveCard, setCardTitle, setCardImageLink, setCardPosterLink, setCardVideoLink, setCardPosterUrl, setCardSummary,
+    getInitAdaptiveCard, setCardTitle, setCardImageLink, setCardPosterLink, setCardVideoLink, setCardPosterUrl, setCardSummary, setCardDepartment,
     setCardAuthor, setCardBtn, setCardPosterAction
 } from '../AdaptiveCard/adaptiveCard';
 
@@ -39,6 +39,7 @@ export interface IDraftMessage {
     selectedTemplate: number,
     videoUrl:string,
     author: string,
+    departmentName?: string,
     buttonTitle?: string,
     buttonLink?: string,
     teams: any[],
@@ -81,6 +82,7 @@ export interface formState {
     errorButtonUrlMessage: string,
     selectedIndex: any,
     itemListSelected: number,
+    departmentName?: string,
     
 }
 
@@ -106,6 +108,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
             title: "",
             summary: "",
             author: "",
+            departmentName:"",
             btnLink: "",
             imageLink: "",
             btnTitle: "",
@@ -222,10 +225,11 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         const summaryAsString = this.localize("Summary");
         const authorAsString = this.localize("Author1");
         const buttonTitleAsString = this.localize("ButtonTitle");
-
+        const departmentNameAsString = this.localize("departmentName");
         setCardTitle(card, titleAsString);
         let imgUrl = getBaseUrl() + "/image/imagePlaceholder.png";
         setCardImageLink(card, imgUrl);
+        setCardDepartment(card, departmentNameAsString);
         setCardSummary(card, summaryAsString);
         setCardAuthor(card, authorAsString);
         setCardBtn(card, buttonTitleAsString, "https://adaptivecards.io");
@@ -235,10 +239,12 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         //const buttonTitleAsString = this.localize("ButtonTitle");
         const summaryAsString = this.localize("Summary");
         const authorAsString = this.localize("Author1");
+        const departmentNameAsString = this.localize("departmentName");
         setCardTitle(card, titleAsString);
         let imgUrl = "https://adaptivecards.io/content/poster-video.png";
         setCardPosterLink(card, imgUrl);
         setCardSummary(card, summaryAsString);
+        setCardDepartment(card, departmentNameAsString);
         setCardAuthor(card, authorAsString);
         console.log("card value from SetDefaultVideo", card);
         setCardVideoLink(card, "https://adaptivecardsblob.blob.core.windows.net/assets/AdaptiveCardsOverviewVideo.mp4");
@@ -387,11 +393,12 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
             console.log("before If statement:", draftMessageDetail.selectedTemplate);
             if (draftMessageDetail.selectedTemplate === 0) {
                 console.log("Inside get function for template:", draftMessageDetail.selectedTemplate);
-                this.card = getInitAdaptiveCard(this.localize,0);
+                this.card = getInitAdaptiveCard(this.localize, 0);
                 this.setDefaultCard(this.card);
                 setCardTitle(this.card, draftMessageDetail.title);
                 setCardImageLink(this.card, draftMessageDetail.imageLink);
                 setCardSummary(this.card, draftMessageDetail.summary);
+                setCardDepartment(this.card, draftMessageDetail.departmentName);
                 setCardAuthor(this.card, draftMessageDetail.author);
                 setCardBtn(this.card, draftMessageDetail.buttonTitle, draftMessageDetail.buttonLink);
             }
@@ -402,7 +409,10 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                     this.setDefaultVideoCard(this.card);
                 setCardTitle(this.card, draftMessageDetail.title);
                 setCardPosterLink(this.card, draftMessageDetail.imageLink);
-                setCardVideoLink(this.card, draftMessageDetail.videoUrl);
+                    setCardVideoLink(this.card, draftMessageDetail.videoUrl);
+                    setCardSummary(this.card, draftMessageDetail.summary);
+                    setCardDepartment(this.card, draftMessageDetail.departmentName);
+                    setCardAuthor(this.card, draftMessageDetail.author);
             }
             
             this.setState({
@@ -413,6 +423,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                 btnTitle: draftMessageDetail.buttonTitle,
                 videoUrl: draftMessageDetail.videoUrl,
                 author: draftMessageDetail.author,
+                departmentName: draftMessageDetail.departmentName,
                 allUsersOptionSelected: draftMessageDetail.allUsers,
                 loader: false
             }, () => {
@@ -498,6 +509,14 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                                         label={this.localize("Author")}
                                         placeholder={this.localize("Author")}
                                         onChange={this.onAuthorChanged}
+                                        autoComplete="off"
+                                    />
+                                    <Input
+                                        className="inputField"
+                                        value={this.state.departmentName}
+                                        label={this.localize("DepartmentName")}
+                                        placeholder={this.localize("DepartmentName")}
+                                        onChange={this.onDepartmentChanged}
                                         autoComplete="off"
                                     />
                          
@@ -977,6 +996,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
             teams: selectedTeams,
             rosters: selctedRosters,
             groups: selectedGroups,
+            departmentName: this.state.departmentName,
             allUsers: this.state.allUsersOptionSelected
         };
 
@@ -1229,6 +1249,46 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                 setCardBtn(this.card, this.state.btnTitle, this.state.btnLink);
                 this.setState({
                     author: event.target.value,
+                    card: this.card
+                }, () => {
+                    if (showDefaultCard) {
+                        this.setDefaultVideoCard(this.card);
+                    }
+                    this.updateCard();
+                });
+            }
+    }
+    private onDepartmentChanged = (event: any) => {
+        if (this.state.itemListSelected == 0) {
+            let showDefaultCard = (!this.state.title && !this.state.imageLink && !this.state.summary && !this.state.author && !event.target.value && !this.state.btnTitle && !this.state.btnLink);
+            setCardTitle(this.card, this.state.title);
+            setCardImageLink(this.card, this.state.imageLink);
+            setCardSummary(this.card, this.state.summary);
+            setCardAuthor(this.card, this.state.author);
+            setCardDepartment(this.card, event.target.value);
+            setCardBtn(this.card, this.state.btnTitle, this.state.btnLink);
+            this.setState({
+                departmentName: event.target.value,
+                card: this.card
+            }, () => {
+                if (showDefaultCard) {
+                    this.setDefaultCard(this.card);
+                }
+                this.updateCard();
+            });
+        }
+        else
+            if (this.state.itemListSelected == 1) {
+                let showDefaultCard = (!this.state.title && !this.state.imageLink && !this.state.summary && !this.state.author && !event.target.value && !this.state.btnTitle && !this.state.btnLink);
+                setCardTitle(this.card, this.state.title);
+                setCardPosterLink(this.card, this.state.imageLink);
+                setCardVideoLink(this.card, this.state.videoUrl);
+                setCardSummary(this.card, this.state.summary);
+                setCardAuthor(this.card, this.state.author);
+                setCardDepartment(this.card, event.target.value);
+                setCardBtn(this.card, this.state.btnTitle, this.state.btnLink);
+                this.setState({
+                    departmentName: event.target.value,
                     card: this.card
                 }, () => {
                     if (showDefaultCard) {

@@ -156,7 +156,13 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.MicrosoftGrap
             Console.WriteLine(this.graphServiceClient.ToString());
             var graphResult = await this.graphServiceClient
                     .Me
-                    .Request()
+                    .Request().Select(user => new
+                    {
+                        user.Id,
+                        user.DisplayName,
+                        user.UserPrincipalName,
+                        user.Department,
+                    })
                     .GetAsync();
             return graphResult;
         }

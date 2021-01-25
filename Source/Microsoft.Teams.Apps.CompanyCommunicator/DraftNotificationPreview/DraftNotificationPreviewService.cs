@@ -151,7 +151,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.DraftNotificationPreview
                 draftNotificationEntity.Summary,
                 draftNotificationEntity.Author,
                 draftNotificationEntity.ButtonTitle,
-                draftNotificationEntity.ButtonLink);
+                draftNotificationEntity.ButtonLink,
+                draftNotificationEntity.DepartmentName);
 
             var attachment = new Attachment
             {

@@ -13,6 +13,15 @@ export const getInitAdaptiveCard = (t: TFunction, Type: number) => {
                             {
                                 "type": "TextBlock",
                                 "weight": "Bolder",
+                                "text": "department",
+                                "size": "small",
+                                "wrap": true,
+                                "horizontalAlignment": "Center"
+                            },
+                            {
+                                "type": "TextBlock",
+                                "weight": "Bolder",
+                                "spacing": "None",
                                 "text": titleTextAsString,
                                 "size": "ExtraLarge",
                                 "wrap": true,
@@ -30,7 +39,7 @@ export const getInitAdaptiveCard = (t: TFunction, Type: number) => {
                                 "type": "TextBlock",
                                 "text": "",
                                 "wrap": true,
-                                "horizontalAlignment": "Center"
+                                "horizontalAlignment": "Left"
                             },
                             {
                                 "type": "TextBlock",
@@ -110,6 +119,15 @@ export const getInitAdaptiveCard = (t: TFunction, Type: number) => {
                             {
                                 "type": "TextBlock",
                                 "weight": "Bolder",
+                                "text": "department",
+                                "size": "small",
+                                "wrap": true,
+                                "horizontalAlignment": "Center"
+                            },
+                            {
+                                "type": "TextBlock",
+                                "weight": "Bolder",
+                                "spacing": "None",
                                 "text": titleTextAsString,
                                 "size": "ExtraLarge",
                                 "wrap": true,
@@ -129,7 +147,7 @@ export const getInitAdaptiveCard = (t: TFunction, Type: number) => {
                                 "type": "TextBlock",
                                 "text": "",
                                 "wrap": true,
-                                "horizontalAlignment": "Center"
+                                "horizontalAlignment": "Left"
                             },
                             {
                                 "type": "TextBlock",
@@ -200,49 +218,51 @@ export const getInitAdaptiveCard = (t: TFunction, Type: number) => {
 }
 
 export const getCardTitle = (card: any) => {
-    return card.body[0].text;
+    return card.body[1].text;
 }
 export const setCardPosterAction = (card: any, action?: string)=> {
     card.body[0].selectAction.url = action;
 }
 
 export const setCardTitle = (card: any, title: string) => {
-    card.body[0].text = title;
+    card.body[1].text = title;
 }
 export const setCardPosterUrl = (card: any, imageLink?: string) => {
     card.backgroundImage.url = imageLink;
 }
 
 export const getCardImageLink = (card: any) => {
-    return card.body[1].url;
+    return card.body[2].url;
 }
-
+export const setCardDepartment = (card: any, department?: string) => {
+    card.body[0].text = department;
+}
 export const setCardImageLink = (card: any, imageLink?: string) => {
-    card.body[1].url = imageLink;
+    card.body[2].url = imageLink;
 }
 export const setCardPosterLink = (card: any, imageLink?: string) => {
-    card.body[1].poster = imageLink;
+    card.body[2].poster = imageLink;
 }
 export const setCardVideoLink = (card: any, videoLink?: string) => {
-    card.body[1].sources[0].url = videoLink;
+    card.body[2].sources[0].url = videoLink;
 }
 export const setCardVideoPlayerUrl = (card: any, videoLink?: string) => {
     card.body[0].sources[0].url = videoLink;
 }
 export const getCardSummary = (card: any) => {
-    return card.body[2].text;
-}
-
-export const setCardSummary = (card: any, summary?: string) => {
-    card.body[2].text = summary;
-}
-
-export const getCardAuthor = (card: any) => {
     return card.body[3].text;
 }
 
+export const setCardSummary = (card: any, summary?: string) => {
+    card.body[3].text = summary;
+}
+
+export const getCardAuthor = (card: any) => {
+    return card.body[4].text;
+}
+
 export const setCardAuthor = (card: any, author?: string) => {
-    card.body[3].text = author;
+    card.body[4].text = author;
 }
 
 export const getCardBtnTitle = (card: any) => {

@@ -9,7 +9,7 @@ import './sendConfirmationTaskModule.scss';
 import { getDraftNotification, getConsentSummaries, sendDraftNotification } from '../../apis/messageListApi';
 import {
     getInitAdaptiveCard, setCardTitle, setCardImageLink, setCardSummary,
-    setCardAuthor, setCardBtn, setCardVideoLink, setCardPosterLink, setCardPosterUrl, setCardPosterAction
+    setCardAuthor, setCardBtn, setCardVideoLink, setCardPosterLink, setCardPosterUrl, setCardPosterAction, setCardDepartment
 } from '../AdaptiveCard/adaptiveCard';
 
 import { ImageUtil } from '../../utility/imageutility';
@@ -61,7 +61,8 @@ class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskMod
         id: "",
         title: "",
         videoUrl: "",
-        buttonLink:"",
+        buttonLink: "",
+        departmentName:"",
     };
 
     private card: any;
@@ -113,6 +114,7 @@ class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskMod
                                     setCardImageLink(this.card, this.state.message.imageLink);
                                     setCardSummary(this.card, this.state.message.summary);
                                     setCardAuthor(this.card, this.state.message.author);
+                                    setCardDepartment(this.card, this.state.message.departmentName);
                                     if (this.state.message.buttonTitle && this.state.message.buttonLink) {
                                         setCardBtn(this.card, this.state.message.buttonTitle, this.state.message.buttonLink);
                                     }
@@ -123,6 +125,9 @@ class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskMod
                                         setCardTitle(this.card, this.state.message.title);
                                         setCardVideoLink(this.card, this.state.message.videoUrl);
                                         setCardPosterLink(this.card, this.state.message.imageLink);
+                                        setCardSummary(this.card, this.state.message.summary);
+                                        setCardAuthor(this.card, this.state.message.author);
+                                        setCardDepartment(this.card, this.state.message.departmentName);
                                     }
                                     else
                                         if (response.data.selectedTemplate === 2) {

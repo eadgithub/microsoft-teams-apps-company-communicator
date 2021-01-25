@@ -27,7 +27,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
                 notificationDataEntity.Summary,
                 notificationDataEntity.Author,
                 notificationDataEntity.ButtonTitle,
-                notificationDataEntity.ButtonLink);
+                notificationDataEntity.ButtonLink, 
+                notificationDataEntity.DepartmentName);
         }
 
         /// <summary>
@@ -46,14 +47,23 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
             string summary,
             string author,
             string buttonTitle,
-            string buttonUrl)
+            string buttonUrl,
+            string department)
         {
             var version = new AdaptiveSchemaVersion(1, 2);
             AdaptiveCard card = new AdaptiveCard(version);
-
+            card.Body.Add(new AdaptiveTextBlock()
+            {
+                Text = department,
+                Size = AdaptiveTextSize.Small,
+                Weight = AdaptiveTextWeight.Bolder,
+                HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
+                Wrap = true,
+            });
             card.Body.Add(new AdaptiveTextBlock()
             {
                 Text = title,
+                Spacing= AdaptiveSpacing.None,
                 Size = AdaptiveTextSize.ExtraLarge,
                 Weight = AdaptiveTextWeight.Bolder,
                 HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
@@ -76,7 +86,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
                 card.Body.Add(new AdaptiveTextBlock()
                 {
                     Text = summary,
-                    HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
+                    HorizontalAlignment = AdaptiveHorizontalAlignment.Left,
                     Wrap = true,
                 });
             }
@@ -138,16 +148,23 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
         public AdaptiveCard CreateAdaptiveVideoCard(
             string title,
             string imageUrl,
-            string videoUrl,
             string summary,
             string author,
             string buttonTitle,
             string buttonUrl, 
-            string id)
+            string id,
+            string department)
         {
             var version = new AdaptiveSchemaVersion(1, 2);
             AdaptiveCard card = new AdaptiveCard(version);
-
+            card.Body.Add(new AdaptiveTextBlock()
+            {
+                Text = title,
+                Size = AdaptiveTextSize.ExtraLarge,
+                Weight = AdaptiveTextWeight.Bolder,
+                HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
+                Wrap = true,
+            });
             card.Body.Add(new AdaptiveTextBlock()
             {
                 Text = title,
@@ -177,7 +194,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
                 card.Body.Add(new AdaptiveTextBlock()
                 {
                     Text = summary,
-                    HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
+                    HorizontalAlignment = AdaptiveHorizontalAlignment.Left,
                     Wrap = true,
                 });
             }
@@ -272,7 +289,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
                 notificationDataEntity.Summary,
                 notificationDataEntity.Author,
                 notificationDataEntity.ButtonTitle,
-                notificationDataEntity.ButtonLink);
+                notificationDataEntity.ButtonLink, 
+                notificationDataEntity.DepartmentName);
                         return x.ToJson();
                     }
                 case 1:
@@ -280,12 +298,12 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
                         var x = this.CreateAdaptiveVideoCard(
                 notificationDataEntity.Title,
                 notificationDataEntity.ImageLink,
-                notificationDataEntity.videoUrl,
                 notificationDataEntity.Summary,
                 notificationDataEntity.Author,
                 notificationDataEntity.ButtonTitle,
                 notificationDataEntity.ButtonLink,
-                notificationDataEntity.Id);
+                notificationDataEntity.Id,
+                notificationDataEntity.DepartmentName);
                         return x.ToJson();
                     }
                 case 2:

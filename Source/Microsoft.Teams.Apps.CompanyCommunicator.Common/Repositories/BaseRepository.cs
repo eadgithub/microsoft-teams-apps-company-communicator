@@ -159,7 +159,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories
             {
                 var partitionKeyFilter = this.GetPartitionKeyFilter(partition);
                 var combinedFilter = this.CombineFilters(filter, partitionKeyFilter);
-                var query = new TableQuery<T>().Where(combinedFilter);
+                 var query = new TableQuery<T>().Where(combinedFilter);
                 var entities = await this.ExecuteQueryAsync(query);
                 Logger.LogError(query.FilterString);
                 return entities;

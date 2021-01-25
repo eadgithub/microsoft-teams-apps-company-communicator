@@ -153,14 +153,14 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
                 CreatedBy = this.HttpContext.User?.Identity?.Name,
                 CreatedDate = DateTime.UtcNow,
                 IsDraft = true,
-                videoUrl = notification.VideoUrl,
+                videoUrl = notification.videoUrl,
                 selectedTemplate = notification.SelectedTemplate,
                 Teams = notification.Teams,
                 Rosters = notification.Rosters,
                 Groups = notification.Groups,
                 AllUsers = notification.AllUsers,
                 SenderName = currentUser.DisplayName,
-                DepartmentName = currentUser.Department,
+                DepartmentName = notification.DepartmentName,
                 
             };
 
@@ -171,8 +171,9 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
 
         private async void GetUser()
         {
-            var users = AsyncHelpers.RunSync<IList<User>>(()=>userservice.GetUsersAsyncTest());
-            currentUser = users.Where<User>(x => x.UserPrincipalName == name).First<User>();
+            //var users = AsyncHelpers.RunSync<IList<User>>(()=>userservice.GetUsersAsyncTest());
+            this.currentUser = AsyncHelpers.RunSync <User>(()=> this.userservice.GetUserAsync(name));
+            //currentUser = users.Where<User>(x => x.UserPrincipalName == name).First<User>();
             System.Diagnostics.Debug.WriteLine("inside"+userservice.GetType());
             Console.WriteLine("inside" + userservice.GetType());
             
@@ -256,7 +257,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
                 AllUsers = notificationEntity.AllUsers,
                 DepartmentName=notificationEntity.DepartmentName,
                 SenderName=notificationEntity.SenderName,
-                VideoUrl=notificationEntity.videoUrl,
+                videoUrl=notificationEntity.videoUrl,
                 SelectedTemplate=notificationEntity.selectedTemplate,
             };
 

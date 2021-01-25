@@ -169,6 +169,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.Notificat
                     Teams = notificationEntity.Teams,
                     Groups = notificationEntity.Groups,
                     Rosters = notificationEntity.Rosters,
+                    videoUrl=notificationEntity.videoUrl,
+                    selectedTemplate=notificationEntity.selectedTemplate,
                     AllUsers = notificationEntity.AllUsers,
                 };
 

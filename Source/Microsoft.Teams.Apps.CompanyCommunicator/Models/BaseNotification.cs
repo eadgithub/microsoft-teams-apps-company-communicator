@@ -34,12 +34,12 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Models
         /// <summary>
         /// Gets or sets the Author value.
         /// </summary>
-        public string Author { get; set; }
+        public string Author { get; set; } 
 
         /// <summary>
         /// Gets or sets the VideoUrl value.
         /// </summary>
-        public string VideoUrl { get; set; }
+        public string videoUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the selected template.
