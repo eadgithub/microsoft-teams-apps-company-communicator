@@ -9,7 +9,7 @@ import { TooltipHost } from 'office-ui-fabric-react';
 import { Icon, Loader, List, Image, Button, IconProps } from '@stardust-ui/react';
 import * as microsoftTeams from "@microsoft/teams-js";
 import {
-    getInitAdaptiveCard, setCardVideoPlayerUrl
+    getInitAdaptiveCard, setCardVideoPlayerPoster, setCardVideoPlayerUrl
 } from '../AdaptiveCard/adaptiveCard';
 import { ImageUtil } from '../../utility/imageutility';
 import { formatDate, formatDuration, formatNumber } from '../../i18n';
@@ -90,7 +90,8 @@ class videoPlayer extends React.Component<videoPlayerProps, IStatusState> {
                     loader: false
                 }, () => {
                         console.log("Message in Video", this.state.message);
-                    setCardVideoPlayerUrl(this.card, this.state.message.videoUrl);
+                        setCardVideoPlayerUrl(this.card, this.state.message.videoUrl);
+                        setCardVideoPlayerPoster(this.card, this.state.message.imageLink);
                     let adaptiveCard = new AdaptiveCards.AdaptiveCard();
                     adaptiveCard.parse(this.card);
                     let renderedCard = adaptiveCard.render();
@@ -192,30 +193,6 @@ class videoPlayer extends React.Component<videoPlayerProps, IStatusState> {
 
     private onClose = () => {
         microsoftTeams.tasks.submitTask();
-    }
-
-    private onExport = async () => {
-        let spanner = document.getElementsByClassName("sendingLoader");
-        spanner[0].classList.remove("hiddenLoader");
-        await exportNotification(this.state.message.id).then(() => {
-            this.setState({ page: "SuccessPage" })
-        }).catch(() => {
-            this.setState({ page: "ErrorPage" })
-        });
-    }
-
-    private getItemList = (items: string[]) => {
-        let resultedTeams: IListItem[] = [];
-        if (items) {
-            resultedTeams = items.map((element) => {
-                const resultedTeam: IListItem = {
-                    header: element,
-                    media: <Image src={ImageUtil.makeInitialImage(element)} avatar />
-                }
-                return resultedTeam;
-            });
-        }
-        return resultedTeams;
     }
 
 }

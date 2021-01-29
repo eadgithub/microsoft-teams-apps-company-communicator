@@ -455,10 +455,9 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                                 <Header content="Select a Template" as="h3"/>
                                 <List selectable onSelectedIndexChange={this.itemSelected.bind(this)} items={this.listItems} />
                             </div>
-                            <div>
                                 <div className="adaptiveCardContainer" />
                             </div>
-                        </div>
+                        
                         <div className="footerContainer">
                             <div className="buttonContainer">
                                 <Button content={this.localize("Next")} id="saveBtn" onClick={this.onNext} primary />
@@ -588,7 +587,14 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                                             onChange={this.onAuthorChanged}
                                             autoComplete="off"
                                         />
-
+                                        <Input
+                                            className="inputField"
+                                            value={this.state.departmentName}
+                                            label={this.localize("DepartmentName")}
+                                            placeholder={this.localize("DepartmentName")}
+                                            onChange={this.onDepartmentChanged}
+                                            autoComplete="off"
+                                        />
                                        
                                     </div>
                                     <div className="adaptiveCardContainer">
@@ -636,6 +642,14 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                                         placeholder={this.localize("HyperLink")}
                                         onChange={this.onBtnLinkChanged}
                                         errorLabel={this.state.errorButtonUrlMessage}
+                                        autoComplete="off"
+                                    />
+                                    <Input
+                                        className="inputField"
+                                        value={this.state.departmentName}
+                                        label={this.localize("DepartmentName")}
+                                        placeholder={this.localize("DepartmentName")}
+                                        onChange={this.onDepartmentChanged}
                                         autoComplete="off"
                                     />
 
@@ -1001,6 +1015,7 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         };
 
         if (this.state.exists) {
+            console.log("Draft Message", draftMessage);
             this.editDraftMessage(draftMessage).then(() => {
                 microsoftTeams.tasks.submitTask();
             });
@@ -1295,6 +1310,11 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
                         this.setDefaultVideoCard(this.card);
                     }
                     this.updateCard();
+                });
+            }
+            else {
+                this.setState({
+                    departmentName: event.target.value,
                 });
             }
     }

@@ -159,8 +159,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
             AdaptiveCard card = new AdaptiveCard(version);
             card.Body.Add(new AdaptiveTextBlock()
             {
-                Text = title,
-                Size = AdaptiveTextSize.ExtraLarge,
+                Text = department,
+                Size = AdaptiveTextSize.Small,
                 Weight = AdaptiveTextWeight.Bolder,
                 HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
                 Wrap = true,
@@ -176,6 +176,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
 
             if (!string.IsNullOrWhiteSpace(imageUrl))
             {
+                
                 card.Body.Add(new AdaptiveImage()
                 {
                     Url = new Uri(imageUrl, UriKind.RelativeOrAbsolute),
@@ -184,7 +185,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
                     AltText = string.Empty,
                     SelectAction = new AdaptiveOpenUrlAction()
                     {
-                        Url = new Uri("https://teams.microsoft.com/l/task/1c07cd26-a088-4db8-8928-ace382fa219f?url=https://companycommunicator.blueridgeit.com/videoPlayer/" + id + "&height=300&width=400&title=Video", UriKind.RelativeOrAbsolute),
+                        Url = new Uri("https://teams.microsoft.com/l/task/1c07cd26-a088-4db8-8928-ace382fa219f?url=https://companycommunicator.blueridgeit.com/videoPlayer/" + id + "&height=320&width=450&title=Video", UriKind.RelativeOrAbsolute),
                     },
                 });
             }

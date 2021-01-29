@@ -249,6 +249,9 @@ export const setCardVideoLink = (card: any, videoLink?: string) => {
 export const setCardVideoPlayerUrl = (card: any, videoLink?: string) => {
     card.body[0].sources[0].url = videoLink;
 }
+export const setCardVideoPlayerPoster = (card: any, imageLink?: string) => {
+    card.body[0].poster = imageLink;
+}
 export const getCardSummary = (card: any) => {
     return card.body[3].text;
 }
