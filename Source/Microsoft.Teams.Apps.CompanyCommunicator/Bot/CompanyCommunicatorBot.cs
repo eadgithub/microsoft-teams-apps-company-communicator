@@ -218,10 +218,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
             {
 
                 this.UpdateReactions(turnContext.Activity.ReplyToId, reaction.Type, true);
-                var newReaction = $"You reacted with test '{reaction.Type}' MessageID: '{turnContext.Activity.ReplyToId}' Type:'{turnContext.Activity.Conversation.ConversationType}'";
-                var replyActivity = MessageFactory.Text(newReaction);
                
-                var resourceResponse = await turnContext.SendActivityAsync(replyActivity, cancellationToken);
             }
         }
         protected override async Task OnReactionsRemovedAsync(IList<MessageReaction> messageReactions, ITurnContext<IMessageReactionActivity> turnContext, CancellationToken cancellationToken)
@@ -229,9 +226,6 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Bot
             foreach (var reaction in messageReactions)
             {
                 this.UpdateReactions(turnContext.Activity.ReplyToId, reaction.Type, false);
-                var newReaction = $"You removed a reaction of type '{reaction.Type}' MessageID: '{turnContext.Activity.ReplyToId}'";
-                var replyActivity = MessageFactory.Text(newReaction);
-                var resourceResponse = await turnContext.SendActivityAsync(replyActivity, cancellationToken);
             }
         }
 

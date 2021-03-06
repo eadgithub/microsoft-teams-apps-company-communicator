@@ -14,7 +14,7 @@ export const getInitAdaptiveCard = (t: TFunction, Type: number) => {
                                 "type": "TextBlock",
                                 "weight": "Bolder",
                                 "text": "department",
-                                "size": "small",
+                                "size": "medium",
                                 "wrap": true,
                                 "horizontalAlignment": "Center"
                             },
@@ -120,7 +120,7 @@ export const getInitAdaptiveCard = (t: TFunction, Type: number) => {
                                 "type": "TextBlock",
                                 "weight": "Bolder",
                                 "text": "department",
-                                "size": "small",
+                                "size": "medium",
                                 "wrap": true,
                                 "horizontalAlignment": "Center"
                             },

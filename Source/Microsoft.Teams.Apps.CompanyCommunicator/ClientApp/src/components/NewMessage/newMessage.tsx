@@ -1119,10 +1119,9 @@ class NewMessage extends React.Component<INewMessageProps, formState> {
         }
         else if (this.state.itemListSelected == 2) {
            
-            
-                setCardPosterAction(this.card, event.target.value);
             let showDefaultCard = (!event.target.value && !this.state.imageLink);
-            setCardTitle(this.card, event.target.value);
+            //setCardPosterAction(this.card, event.target.value);
+            //setCardTitle(this.card, event.target.value);
             setCardPosterUrl(this.card, this.state.imageLink);
             setCardPosterAction(this.card, this.state.btnLink);
             console.log("Card in SetTitle", event.target.value);
