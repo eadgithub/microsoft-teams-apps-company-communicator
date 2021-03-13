@@ -336,7 +336,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Controllers
             {
                 return this.BadRequest($"Team {draftNotificationPreviewRequest.TeamsTeamId} not found.");
             }
-
+            var request = this.HttpContext.Request;
+            var baseURL = $"{request.Scheme}://{request.Host}";
             var result = await this.draftNotificationPreviewService.SendPreview(
                 notificationEntity,
                 teamDataEntity,

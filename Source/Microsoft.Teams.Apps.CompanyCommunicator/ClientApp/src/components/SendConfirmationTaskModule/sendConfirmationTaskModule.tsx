@@ -109,7 +109,7 @@ class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskMod
                         }, () => {
                                 console.log("Send Confirmation template:", this.state.selectedTemplate );
                                 if (response.data.selectedTemplate === 0) {
-
+                                    this.card = getInitAdaptiveCard(this.localize, 0);
                                     setCardTitle(this.card, this.state.message.title);
                                     setCardImageLink(this.card, this.state.message.imageLink);
                                     setCardSummary(this.card, this.state.message.summary);
@@ -121,6 +121,18 @@ class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskMod
                                 }
                                 else
                                     if (response.data.selectedTemplate === 1) {
+                                        this.card = getInitAdaptiveCard(this.localize, 4);
+                                        setCardTitle(this.card, this.state.message.title);
+                                        setCardImageLink(this.card, this.state.message.imageLink);
+                                        setCardSummary(this.card, this.state.message.summary);
+                                        setCardAuthor(this.card, this.state.message.author);
+                                        setCardDepartment(this.card, this.state.message.departmentName);
+                                        if (this.state.message.buttonTitle && this.state.message.buttonLink) {
+                                            setCardBtn(this.card, this.state.message.buttonTitle, this.state.message.buttonLink);
+                                        }
+                                    }
+                                    else
+                                    if (response.data.selectedTemplate === 2) {
                                         this.card = getInitAdaptiveCard(this.localize, 1);
                                         setCardTitle(this.card, this.state.message.title);
                                         setCardVideoLink(this.card, this.state.message.videoUrl);
@@ -130,7 +142,17 @@ class SendConfirmationTaskModule extends React.Component<SendConfirmationTaskMod
                                         setCardDepartment(this.card, this.state.message.departmentName);
                                     }
                                     else
-                                        if (response.data.selectedTemplate === 2) {
+                                        if (response.data.selectedTemplate === 3) {
+                                            this.card = getInitAdaptiveCard(this.localize, 5);
+                                            setCardTitle(this.card, this.state.message.title);
+                                            setCardVideoLink(this.card, this.state.message.videoUrl);
+                                            setCardPosterLink(this.card, this.state.message.imageLink);
+                                            setCardSummary(this.card, this.state.message.summary);
+                                            setCardAuthor(this.card, this.state.message.author);
+                                            setCardDepartment(this.card, this.state.message.departmentName);
+                                        }
+                                        else
+                                        if (response.data.selectedTemplate === 4) {
                                             this.card = getInitAdaptiveCard(this.localize, 2);
                                             setCardPosterUrl(this.card, this.state.message.imageLink);
                                             setCardPosterAction(this.card, this.state.message.buttonLink);

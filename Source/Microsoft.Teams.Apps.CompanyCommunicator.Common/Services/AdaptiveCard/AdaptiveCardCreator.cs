@@ -7,6 +7,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
     using System;
     using System.Collections.Generic;
     using AdaptiveCards;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.Teams.Apps.CompanyCommunicator.Common.Repositories.NotificationData;
 
     /// <summary>
@@ -51,6 +52,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
             string department)
         {
             var version = new AdaptiveSchemaVersion(1, 2);
+            
             AdaptiveCard card = new AdaptiveCard(version);
             card.Body.Add(new AdaptiveTextBlock()
             {
@@ -122,8 +124,8 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
                         {
                             new AdaptiveImage()
                             {
-                                Url = new Uri("https://blcompanycommunicator.azurewebsites.net/image/DHLogo.png", UriKind.RelativeOrAbsolute),
-                                Size = AdaptiveImageSize.Large,
+                                Url = new Uri( Constants.BaseUrl + "/image/Customs.png", UriKind.RelativeOrAbsolute),
+                                Size = AdaptiveImageSize.Stretch,
                             },
                         },
                     },
@@ -135,7 +137,112 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
                         {
                             new AdaptiveImage()
                             {
-                                Url = new Uri("https://blcompanycommunicator.azurewebsites.net/image/FTGOT.png", UriKind.RelativeOrAbsolute),
+                                Url = new Uri(Constants.BaseUrl + "/image/UAE.png", UriKind.RelativeOrAbsolute),
+                                Size = AdaptiveImageSize.Stretch,
+                            },
+                        },
+                    },
+                    },
+            });
+
+            return card;
+        }
+        public AdaptiveCard CreateArabicAdaptiveCard(
+            string title,
+            string imageUrl,
+            string summary,
+            string author,
+            string buttonTitle,
+            string buttonUrl,
+            string department)
+        {
+            var version = new AdaptiveSchemaVersion(1, 2);
+            AdaptiveCard card = new AdaptiveCard(version);
+            card.Body.Add(new AdaptiveTextBlock()
+            {
+                Text = department,
+                Size = AdaptiveTextSize.Medium,
+                Weight = AdaptiveTextWeight.Bolder,
+                HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
+                Wrap = true,
+            });
+            card.Body.Add(new AdaptiveTextBlock()
+            {
+                Text = title,
+                Spacing = AdaptiveSpacing.None,
+                Size = AdaptiveTextSize.ExtraLarge,
+                Weight = AdaptiveTextWeight.Bolder,
+                HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
+                Wrap = true,
+            });
+
+            if (!string.IsNullOrWhiteSpace(imageUrl))
+            {
+                card.Body.Add(new AdaptiveImage()
+                {
+                    Url = new Uri(imageUrl, UriKind.RelativeOrAbsolute),
+                    Spacing = AdaptiveSpacing.Default,
+                    Size = AdaptiveImageSize.Stretch,
+                    AltText = string.Empty,
+                });
+            }
+
+            if (!string.IsNullOrWhiteSpace(summary))
+            {
+                card.Body.Add(new AdaptiveTextBlock()
+                {
+                    Text = summary,
+                    HorizontalAlignment = AdaptiveHorizontalAlignment.Right,
+                    Wrap = true,
+                });
+            }
+
+            if (!string.IsNullOrWhiteSpace(author))
+            {
+                card.Body.Add(new AdaptiveTextBlock()
+                {
+                    Text = author,
+                    Size = AdaptiveTextSize.Small,
+                    Weight = AdaptiveTextWeight.Lighter,
+                    HorizontalAlignment = AdaptiveHorizontalAlignment.Right,
+                    Wrap = true,
+                });
+            }
+
+            if (!string.IsNullOrWhiteSpace(buttonTitle)
+                && !string.IsNullOrWhiteSpace(buttonUrl))
+            {
+                card.Actions.Add(new AdaptiveOpenUrlAction()
+                {
+                    Title = buttonTitle,
+                    Url = new Uri(buttonUrl, UriKind.RelativeOrAbsolute),
+                });
+            }
+            card.Body.Add(new AdaptiveColumnSet()
+            {
+                Columns = new List<AdaptiveColumn>() {
+                    new AdaptiveColumn()
+                    {
+                        Width = AdaptiveColumnWidth.Stretch,
+                        VerticalContentAlignment = AdaptiveVerticalContentAlignment.Center,
+                        Items = new List<AdaptiveElement>()
+                        {
+                            new AdaptiveImage()
+                            {
+                                Url = new Uri(Constants.BaseUrl + "/image/UAE.png", UriKind.RelativeOrAbsolute),
+                                Size = AdaptiveImageSize.Stretch,
+                            },
+                        },
+                    },
+                    new AdaptiveColumn()
+                    {
+                        Width = AdaptiveColumnWidth.Stretch,
+                        VerticalContentAlignment = AdaptiveVerticalContentAlignment.Bottom,
+                        Items = new List<AdaptiveElement>()
+                        {
+                            new AdaptiveImage()
+                            {
+                                Url = new Uri(Constants.BaseUrl + "/image/Customs.png", UriKind.RelativeOrAbsolute),
                                 Size = AdaptiveImageSize.Stretch,
                             },
                         },
@@ -231,7 +338,117 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
                         {
                             new AdaptiveImage()
                             {
-                                Url = new Uri("https://blcompanycommunicator.azurewebsites.net/image/DHLogo.png", UriKind.RelativeOrAbsolute),
+                                Url = new Uri(Constants.BaseUrl + "/image/Customs.png", UriKind.RelativeOrAbsolute),
+                                Size = AdaptiveImageSize.Stretch,
+                            },
+                        },
+                    },
+                    new AdaptiveColumn()
+                    {
+                        Width = AdaptiveColumnWidth.Stretch,
+                        VerticalContentAlignment = AdaptiveVerticalContentAlignment.Bottom,
+                        Items = new List<AdaptiveElement>()
+                        {
+                            new AdaptiveImage()
+                            {
+                                Url = new Uri(Constants.BaseUrl + "/image/UAE.png", UriKind.RelativeOrAbsolute),
+                                Size = AdaptiveImageSize.Stretch,
+                            },
+                        },
+                    },
+                    },
+            });
+
+            return card;
+        }
+        public AdaptiveCard CreateArabicAdaptiveVideoCard(
+           string title,
+           string imageUrl,
+           string summary,
+           string author,
+           string buttonTitle,
+           string buttonUrl,
+           string id,
+           string department)
+        {
+            var version = new AdaptiveSchemaVersion(1, 2);
+            AdaptiveCard card = new AdaptiveCard(version);
+            card.Body.Add(new AdaptiveTextBlock()
+            {
+                Text = department,
+                Size = AdaptiveTextSize.Medium,
+                Weight = AdaptiveTextWeight.Bolder,
+                HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
+                Wrap = true,
+            });
+            card.Body.Add(new AdaptiveTextBlock()
+            {
+                Text = title,
+                Size = AdaptiveTextSize.ExtraLarge,
+                Weight = AdaptiveTextWeight.Bolder,
+                HorizontalAlignment = AdaptiveHorizontalAlignment.Center,
+                Wrap = true,
+            });
+
+            if (!string.IsNullOrWhiteSpace(imageUrl))
+            {
+
+                card.Body.Add(new AdaptiveImage()
+                {
+                    Url = new Uri(imageUrl, UriKind.RelativeOrAbsolute),
+                    Spacing = AdaptiveSpacing.Default,
+                    Size = AdaptiveImageSize.Stretch,
+                    AltText = string.Empty,
+                    SelectAction = new AdaptiveOpenUrlAction()
+                    {
+                        Url = new Uri("https://teams.microsoft.com/l/task/1c07cd26-a088-4db8-8928-ace382fa219f?url=https://companycommunicator.blueridgeit.com/videoPlayer/" + id + "&height=320&width=450&title=Video", UriKind.RelativeOrAbsolute),
+                    },
+                });
+            }
+
+            if (!string.IsNullOrWhiteSpace(summary))
+            {
+                card.Body.Add(new AdaptiveTextBlock()
+                {
+                    Text = summary,
+                    HorizontalAlignment = AdaptiveHorizontalAlignment.Right,
+                    Wrap = true,
+                });
+            }
+
+            if (!string.IsNullOrWhiteSpace(author))
+            {
+                card.Body.Add(new AdaptiveTextBlock()
+                {
+                    Text = author,
+                    Size = AdaptiveTextSize.Small,
+                    Weight = AdaptiveTextWeight.Lighter,
+                    HorizontalAlignment = AdaptiveHorizontalAlignment.Right,
+                    Wrap = true,
+                });
+            }
+
+            if (!string.IsNullOrWhiteSpace(buttonTitle)
+                && !string.IsNullOrWhiteSpace(buttonUrl))
+            {
+                card.Actions.Add(new AdaptiveOpenUrlAction()
+                {
+                    Title = buttonTitle,
+                    Url = new Uri(buttonUrl, UriKind.RelativeOrAbsolute),
+                });
+            }
+            card.Body.Add(new AdaptiveColumnSet()
+            {
+                Columns = new List<AdaptiveColumn>() {
+                    new AdaptiveColumn()
+                    {
+                        Width = AdaptiveColumnWidth.Stretch,
+                        VerticalContentAlignment = AdaptiveVerticalContentAlignment.Center,
+                        Items = new List<AdaptiveElement>()
+                        {
+                            new AdaptiveImage()
+                            {
+                                Url = new Uri(Constants.BaseUrl + "/image/UAE.png", UriKind.RelativeOrAbsolute),
                                 Size = AdaptiveImageSize.Large,
                             },
                         },
@@ -244,7 +461,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
                         {
                             new AdaptiveImage()
                             {
-                                Url = new Uri("https://blcompanycommunicator.azurewebsites.net/image/FTGOT.png", UriKind.RelativeOrAbsolute),
+                                Url = new Uri(Constants.BaseUrl + "/image/Customs.png", UriKind.RelativeOrAbsolute),
                                 Size = AdaptiveImageSize.Stretch,
                             },
                         },
@@ -254,21 +471,20 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
 
             return card;
         }
+
         public AdaptiveCard CreateAdaptiveBannerCard(string imageUrl, string buttonUrl)
         {
-            var version = new AdaptiveSchemaVersion(1, 1);
+            var version = new AdaptiveSchemaVersion(1, 2);
             AdaptiveCard card = new AdaptiveCard(version);
-            card.BackgroundImage = new AdaptiveBackgroundImage() { Url = new Uri(imageUrl, UriKind.RelativeOrAbsolute), FillMode = AdaptiveImageFillMode.Cover };
-            card.PixelMinHeight = 800;
             if (!string.IsNullOrWhiteSpace(imageUrl))
             {
                 card.Body.Add(new AdaptiveImage()
                 {
-                    Url= new Uri("https://blcompanycommunicator-test.azurewebsites.net/image/transparentbanner.png", UriKind.RelativeOrAbsolute),
-                    PixelWidth=500,
-                    PixelHeight=800,
-                    Size=AdaptiveImageSize.Stretch,
+                    Url = new Uri(imageUrl, UriKind.RelativeOrAbsolute),
+                    PixelWidth = 400,
+                    Size = AdaptiveImageSize.Stretch,
                     AltText = string.Empty,
+                    Spacing=AdaptiveSpacing.Default,
                     SelectAction = new AdaptiveOpenUrlAction()
                     {
                         Url = new Uri(buttonUrl, UriKind.RelativeOrAbsolute),
@@ -278,6 +494,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
 
             return card;
         }
+
     public string GetCardJson(NotificationDataEntity notificationDataEntity)
         {
             switch (notificationDataEntity.selectedTemplate)
@@ -296,6 +513,18 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
                     }
                 case 1:
                     {
+                        var x = this.CreateArabicAdaptiveCard(
+                notificationDataEntity.Title,
+                notificationDataEntity.ImageLink,
+                notificationDataEntity.Summary,
+                notificationDataEntity.Author,
+                notificationDataEntity.ButtonTitle,
+                notificationDataEntity.ButtonLink,
+                notificationDataEntity.DepartmentName);
+                        return x.ToJson();
+                    }
+                case 2:
+                    {
                         var x = this.CreateAdaptiveVideoCard(
                 notificationDataEntity.Title,
                 notificationDataEntity.ImageLink,
@@ -307,11 +536,27 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common.Services.AdaptiveCard
                 notificationDataEntity.DepartmentName);
                         return x.ToJson();
                     }
-                case 2:
+                case 3:
+                    {
+                        var x = this.CreateArabicAdaptiveVideoCard(
+                notificationDataEntity.Title,
+                notificationDataEntity.ImageLink,
+                notificationDataEntity.Summary,
+                notificationDataEntity.Author,
+                notificationDataEntity.ButtonTitle,
+                notificationDataEntity.ButtonLink,
+                notificationDataEntity.Id,
+                notificationDataEntity.DepartmentName);
+                        return x.ToJson();
+                    }
+                case 4:
                     {
                         var x = this.CreateAdaptiveBannerCard(notificationDataEntity.ImageLink, notificationDataEntity.ButtonLink);
                         return x.ToJson();
                     }
+               
+               
+
             }
             return null;
         }

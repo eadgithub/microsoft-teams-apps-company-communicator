@@ -97,7 +97,7 @@ class TabContainer extends React.Component<ITaskInfoProps, ITabContainerState> {
 					content: (
 						<div>
 							<Input
-								placeholder="Search"
+								placeholder={this.localize('Search')}
 								icon="search"
 								className="searchBox"
 								onChange={this.searchTextChanged.bind(this)}

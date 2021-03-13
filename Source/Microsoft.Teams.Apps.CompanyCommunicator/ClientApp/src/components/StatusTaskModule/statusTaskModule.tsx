@@ -163,7 +163,7 @@ class StatusTaskModule extends React.Component<StatusTaskModuleProps, IStatusSta
                                     <br />
                                     <label>{this.localize("Failure", { "FailureCount": this.state.message.failed })}</label>
                                     <br />
-                                    <label>{this.localize("Reactions", { "Reactions": this.state.message.reactions })}</label>
+                                 
                                     {this.state.message.unknown &&
                                         <>
                                         <label>{this.localize("Unknown", { "UnknownCount": this.state.message.unknown })}</label>

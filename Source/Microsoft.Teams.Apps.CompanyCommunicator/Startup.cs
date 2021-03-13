@@ -44,6 +44,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator
     using Microsoft.Teams.Apps.CompanyCommunicator.Controllers.Options;
     using Microsoft.Teams.Apps.CompanyCommunicator.DraftNotificationPreview;
     using Microsoft.Teams.Apps.CompanyCommunicator.Localization;
+    using Microsoft.Teams.Apps.CompanyCommunicator.Common;
 
     using Beta = BetaLib::Microsoft.Graph;
 
@@ -150,6 +151,10 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator
 
             // The bot needs an HttpClient to download and upload files.
             services.AddHttpClient();
+
+            // Use HTTP Context to make BasURL accessible.
+            services.AddTransient<BaseURLHelper, BaseURLHelper>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             // Add bot services.
             services.AddSingleton<ICredentialProvider, ConfigurationCredentialProvider>();

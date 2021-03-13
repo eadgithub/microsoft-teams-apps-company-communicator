@@ -85,5 +85,13 @@
   "ExportButtonText": "Export detailed results",
   "ExportButtonProgressText": "Export in progress",
   "SenderName": "Sender",
-  "DepartmentName": "Department"
+  "DepartmentName": "Department",
+  "Reactions": "Reactions",
+  "Search": "Search",
+  "DefaultCard": "Default Card",
+  "DefaultCardAR": "Default Card (Arabic)",
+  "VideoCard": "Video Card",
+  "VideoCardAR": "Video Card (Arabic)",
+  "PosterCard": "Poster Card",
+  "SelectTemplate": "Select a Template"
 }

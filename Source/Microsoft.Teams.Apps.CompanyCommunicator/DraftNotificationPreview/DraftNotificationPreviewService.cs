@@ -27,7 +27,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.DraftNotificationPreview
         private static readonly string MsTeamsChannelId = "msteams";
         private static readonly string ChannelConversationType = "channel";
         private static readonly string ThrottledErrorResponse = "Throttled";
-
+        private string BaseURL;
         private readonly string botAppId;
         private readonly AdaptiveCardCreator adaptiveCardCreator;
         private readonly CompanyCommunicatorBotAdapter companyCommunicatorBotAdapter;
@@ -63,6 +63,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.DraftNotificationPreview
         /// It returns HttpStatusCode.TooManyRequests, if the bot service throttled the request to send the adaptive card.</returns>
         public async Task<HttpStatusCode> SendPreview(NotificationDataEntity draftNotificationEntity, TeamDataEntity teamDataEntity, string teamsChannelId)
         {
+            
             if (draftNotificationEntity == null)
             {
                 throw new ArgumentException("Null draft notification entity.");
@@ -140,6 +141,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.DraftNotificationPreview
             NotificationDataEntity draftNotificationEntity)
         {
             var reply = this.CreateReply(draftNotificationEntity);
+            
             await turnContext.SendActivityAsync(reply);
         }
 

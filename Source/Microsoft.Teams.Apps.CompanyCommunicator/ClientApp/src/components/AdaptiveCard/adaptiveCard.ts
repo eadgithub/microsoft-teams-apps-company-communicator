@@ -1,4 +1,5 @@
 import { TFunction } from "i18next";
+import { getBaseUrl } from '../../configVariables';
 
 
 export const getInitAdaptiveCard = (t: TFunction, Type: number) => {
@@ -57,7 +58,7 @@ export const getInitAdaptiveCard = (t: TFunction, Type: number) => {
                                         "items": [
                                             {
                                                 "type": "Image",
-                                                "url": "https://blcompanycommunicator.azurewebsites.net/image/DHLogo.png",
+                                                "url": getBaseUrl()+"/image/Customs.png",
                                                 "size": "Large"
                                             }
                                         ],
@@ -69,7 +70,7 @@ export const getInitAdaptiveCard = (t: TFunction, Type: number) => {
                                         "items": [
                                             {
                                                 "type": "Image",
-                                                "url": "https://blcompanycommunicator.azurewebsites.net/image/FTGOT.png"
+                                                "url": getBaseUrl() + "/image/UAE.png"
                                             }
                                         ],
                                         "verticalContentAlignment": "Bottom"
@@ -88,17 +89,13 @@ export const getInitAdaptiveCard = (t: TFunction, Type: number) => {
                 return (
                     {
                         "type": "AdaptiveCard",
-                        "minHeight": "800px",
-                        "backgroundImage": {
-                            "url": "https://blcompanycommunicator-test.azurewebsites.net/image/banner.png"
-                        },
                         "body": [
                             {
                                 "type": "Image",
-                                "width": "500px",
-                                "height": "800px",
+                                "width": "400px",
                                 "size": "Stretch",
-                                "url": "https://blcompanycommunicator-test.azurewebsites.net/image/transparentbanner.png",
+                                "spacing":"Default",
+                                "url": getBaseUrl()+"/image/banner.png",
                                 "selectAction": {
                                     "type": "Action.OpenUrl",
                                     "url": "https://www.blueridgeit.com"
@@ -165,7 +162,7 @@ export const getInitAdaptiveCard = (t: TFunction, Type: number) => {
                                         "items": [
                                             {
                                                 "type": "Image",
-                                                "url": "https://blcompanycommunicator.azurewebsites.net/image/DHLogo.png",
+                                                "url": getBaseUrl()+"/image/Customs.png",
                                                 "size": "Large"
                                             }
                                         ],
@@ -177,7 +174,7 @@ export const getInitAdaptiveCard = (t: TFunction, Type: number) => {
                                         "items": [
                                             {
                                                 "type": "Image",
-                                                "url": "https://blcompanycommunicator.azurewebsites.net/image/FTGOT.png"
+                                                "url": getBaseUrl()+"/image/UAE.png"
                                             }
                                         ],
                                         "verticalContentAlignment": "Bottom"
@@ -214,6 +211,168 @@ export const getInitAdaptiveCard = (t: TFunction, Type: number) => {
                     }
                 );
             }
+        case 4:
+            {
+                return (
+                    {
+                        "type": "AdaptiveCard",
+                        "body": [
+                            {
+                                "type": "TextBlock",
+                                "weight": "Bolder",
+                                "text": "department",
+                                "size": "medium",
+                                "wrap": true,
+                                "horizontalAlignment": "Center"
+                            },
+                            {
+                                "type": "TextBlock",
+                                "weight": "Bolder",
+                                "spacing": "None",
+                                "text": titleTextAsString,
+                                "size": "ExtraLarge",
+                                "wrap": true,
+                                "horizontalAlignment": "Center"
+                            },
+                            {
+                                "type": "Image",
+                                "spacing": "Default",
+                                "url": "",
+                                "size": "Stretch",
+                                "width": "400px",
+                                "altText": ""
+                            },
+                            {
+                                "type": "TextBlock",
+                                "text": "",
+                                "wrap": true,
+                                "horizontalAlignment": "Right"
+                            },
+                            {
+                                "type": "TextBlock",
+                                "wrap": true,
+                                "size": "Small",
+                                "weight": "Lighter",
+                                "text": "",
+                                "horizontalAlignment": "Right"
+                            },
+                            {
+                                "type": "ColumnSet",
+                                "columns": [
+                                    {
+                                        "type": "Column",
+                                        "width": "stretch",
+                                        "items": [
+                                            {
+                                                "type": "Image",
+                                                "url": getBaseUrl()+"/image/UAE.png",
+                                                "size": "Large"
+                                            }
+                                        ],
+                                        "verticalContentAlignment": "Center"
+                                    },
+                                    {
+                                        "type": "Column",
+                                        "width": "stretch",
+                                        "items": [
+                                            {
+                                                "type": "Image",
+                                                "url": getBaseUrl()+"/image/Customs.png"
+                                            }
+                                        ],
+                                        "verticalContentAlignment": "Bottom"
+                                    }
+                                ]
+                            }
+                        ],
+                        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                        "version": "1.2"
+                    }
+                );
+                
+            }
+        case 5:
+            {
+                return (
+                    {
+                        "type": "AdaptiveCard",
+                        "body": [
+                            {
+                                "type": "TextBlock",
+                                "weight": "Bolder",
+                                "text": "department",
+                                "size": "medium",
+                                "wrap": true,
+                                "horizontalAlignment": "Center"
+                            },
+                            {
+                                "type": "TextBlock",
+                                "weight": "Bolder",
+                                "spacing": "None",
+                                "text": titleTextAsString,
+                                "size": "ExtraLarge",
+                                "wrap": true,
+                                "horizontalAlignment": "Center"
+                            },
+                            {
+                                "type": "Media",
+                                "poster": "${ThumbnailUrl}",
+                                "sources": [
+                                    {
+                                        "mimeType": "video/mp4",
+                                        "url": "${Url}"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "TextBlock",
+                                "text": "",
+                                "wrap": true,
+                                "horizontalAlignment": "Right"
+                            },
+                            {
+                                "type": "TextBlock",
+                                "wrap": true,
+                                "size": "Small",
+                                "weight": "Lighter",
+                                "text": "",
+                                "horizontalAlignment": "Right"
+                            },
+                            {
+                                "type": "ColumnSet",
+                                "columns": [
+                                    {
+                                        "type": "Column",
+                                        "width": "stretch",
+                                        "items": [
+                                            {
+                                                "type": "Image",
+                                                "url": getBaseUrl()+"/image/UAE.png",
+                                                "size": "Large"
+                                            }
+                                        ],
+                                        "verticalContentAlignment": "Center"
+                                    },
+                                    {
+                                        "type": "Column",
+                                        "width": "stretch",
+                                        "items": [
+                                            {
+                                                "type": "Image",
+                                                "url": getBaseUrl()+"/image/Customs.png"
+                                            }
+                                        ],
+                                        "verticalContentAlignment": "Bottom"
+                                    }
+                                ]
+                            }
+                        ],
+                        "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                        "version": "1.2"
+                    }
+                );
+
+            }
     }
 }
 
@@ -228,7 +387,7 @@ export const setCardTitle = (card: any, title: string) => {
     card.body[1].text = title;
 }
 export const setCardPosterUrl = (card: any, imageLink?: string) => {
-    card.backgroundImage.url = imageLink;
+    card.body[0].url = imageLink;
 }
 
 export const getCardImageLink = (card: any) => {

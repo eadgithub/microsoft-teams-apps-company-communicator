@@ -42,6 +42,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="ClientApp\public\locales\ar-SA\translation.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
     <WCFMetadata Include="Connected Services" />
   </ItemGroup>
 
@@ -49,7 +55,7 @@
     <None Update="ClientApp\build\locales\en-US\translation.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="ClientApp\public\locales\en-US\translation.json">
+    <None Update="ClientApp\public\locales\ar-SA\&#xD;&#xA;          ">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

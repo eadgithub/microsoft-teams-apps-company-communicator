@@ -63,5 +63,7 @@ namespace Microsoft.Teams.Apps.CompanyCommunicator.Common
         /// get the OData next page link.
         /// </summary>
         public const string ODataNextPageLink = "@odata.nextLink";
+
+        public const string BaseUrl = "https://companycommunicator.blueridgeit.com";
     }
 }
