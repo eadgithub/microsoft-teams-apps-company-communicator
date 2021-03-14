@@ -1,4 +1,4 @@
-The app uses the following data stores:
+The app uses the following data stores
 1. Azure Storage Account
 1. Application Insights
 
